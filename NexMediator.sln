@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{52AF6B78-014F-4B08-AEC9-C015183AB47C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexMediator.Abstractions", "src\NexMediator.Abstractions\NexMediator.Abstractions.csproj", "{A9D15948-66D5-4014-A1F7-9F6DA9C4ACA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexMediator.Core", "src\NexMediator.Core\NexMediator.Core.csproj", "{14E32D4C-3D7F-49E4-92CA-14E84FFB3439}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexMediator.Pipeline", "src\NexMediator.Pipeline\NexMediator.Pipeline.csproj", "{BDC1A237-4E45-4EDC-AF66-6C268EEBDC34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexMediator.Extensions", "src\NexMediator.Extensions\NexMediator.Extensions.csproj", "{DA496885-26B8-4CFA-9B87-B6BB756EA79B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9D15948-66D5-4014-A1F7-9F6DA9C4ACA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9D15948-66D5-4014-A1F7-9F6DA9C4ACA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9D15948-66D5-4014-A1F7-9F6DA9C4ACA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9D15948-66D5-4014-A1F7-9F6DA9C4ACA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14E32D4C-3D7F-49E4-92CA-14E84FFB3439}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14E32D4C-3D7F-49E4-92CA-14E84FFB3439}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14E32D4C-3D7F-49E4-92CA-14E84FFB3439}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14E32D4C-3D7F-49E4-92CA-14E84FFB3439}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDC1A237-4E45-4EDC-AF66-6C268EEBDC34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDC1A237-4E45-4EDC-AF66-6C268EEBDC34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDC1A237-4E45-4EDC-AF66-6C268EEBDC34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDC1A237-4E45-4EDC-AF66-6C268EEBDC34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA496885-26B8-4CFA-9B87-B6BB756EA79B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA496885-26B8-4CFA-9B87-B6BB756EA79B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA496885-26B8-4CFA-9B87-B6BB756EA79B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA496885-26B8-4CFA-9B87-B6BB756EA79B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A9D15948-66D5-4014-A1F7-9F6DA9C4ACA6} = {52AF6B78-014F-4B08-AEC9-C015183AB47C}
+		{14E32D4C-3D7F-49E4-92CA-14E84FFB3439} = {52AF6B78-014F-4B08-AEC9-C015183AB47C}
+		{BDC1A237-4E45-4EDC-AF66-6C268EEBDC34} = {52AF6B78-014F-4B08-AEC9-C015183AB47C}
+		{DA496885-26B8-4CFA-9B87-B6BB756EA79B} = {52AF6B78-014F-4B08-AEC9-C015183AB47C}
+	EndGlobalSection
+EndGlobal
