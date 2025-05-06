@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+<ItemGroup>
+  <ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" />
+</ItemGroup>
+
+
+  <PropertyGroup>
+    <PackageId>NexMediator.Core</PackageId>
+    <Description>Lightweight CQRS mediator implementation with a configurable pipeline.</Description>
+    <PackageTags>CQRS;Mediator;DotNet;NexMediator</PackageTags>
+  </PropertyGroup>
+
+</Project>
