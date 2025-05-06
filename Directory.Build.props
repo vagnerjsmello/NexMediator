@@ -1,0 +1,19 @@
+<!-- Directory.Build.props -->
+<Project>
+  <PropertyGroup>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <LangVersion>preview</LangVersion>  
+    
+    <Version>1.0.0</Version>
+    <Authors>Vagner Mello</Authors>
+    <Company>N/A</Company>
+    <RepositoryUrl>https://github.com/vagnerjsmello/NexMediator</RepositoryUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression> 
+    
+    <!-- Generate .nupkg when building -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+</Project>
