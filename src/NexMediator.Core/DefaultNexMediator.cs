@@ -26,19 +26,19 @@ namespace NexMediator.Core;
 /// - Thread-safe operations
 /// - Cancellation support
 /// </remarks>
-public class NexMediator : INexMediator
+public class DefaultNexMediator : INexMediator
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly NexMediatorOptions _options;
-    private readonly ILogger<NexMediator>? _logger;
+    private readonly ILogger<DefaultNexMediator>? _logger;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NexMediator"/> class
+    /// Initializes a new instance of the <see cref="DefaultNexMediator"/> class
     /// </summary>
     /// <param name="serviceProvider">The service provider for resolving handlers and behaviors</param>
     /// <param name="logger">Optional logger for diagnostics</param>
     /// <param name="options">Configuration options for the mediator</param>
-    public NexMediator(IServiceProvider serviceProvider, ILogger<NexMediator>? logger, NexMediatorOptions options)
+    public DefaultNexMediator(IServiceProvider serviceProvider, ILogger<DefaultNexMediator>? logger, NexMediatorOptions options)
     {
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
