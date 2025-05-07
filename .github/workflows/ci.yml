@@ -5,13 +5,14 @@ on:
     branches:
       - main
       - develop
+      - 'feature/**'
   pull_request:
     branches:
       - develop
 
 jobs:
   build-and-test:
-    name: Build and Test
+    name: Build, Test & Pack
     runs-on: ubuntu-latest
 
     steps:
@@ -23,6 +24,14 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Build.props') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
       - name: Restore dependencies
         run: dotnet restore
 
@@ -31,3 +40,12 @@ jobs:
 
       - name: Run tests
         run: dotnet test --configuration Release --no-build --verbosity normal
+
+      - name: Pack meta-package
+        run: dotnet pack src/NexMediator/NexMediator.csproj \
+              --configuration Release \
+              --no-build \
+              --output ./nupkg
+
+      - name: List package artifacts
+        run: ls src/NexMediator/nupkg

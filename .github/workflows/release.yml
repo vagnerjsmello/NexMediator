@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    name: Publish NuGet Package
+    name: Publish Meta-Package to NuGet
     runs-on: ubuntu-latest
 
     steps:
@@ -25,21 +25,21 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build project
+      - name: Build solution
         run: dotnet build --configuration Release --no-restore
 
-      - name: Pack NuGet package
+      - name: Pack NexMediator meta-package
         run: |
-          dotnet pack src/NexMediator.Extensions/NexMediator.Extensions.csproj \
+          dotnet pack src/NexMediator/NexMediator.csproj \
             --configuration Release \
             --no-build \
             --include-symbols \
             /p:PackageVersion=${PACKAGE_VERSION} \
             --output ./nupkg
 
-      - name: Publish to NuGet
+      - name: Publish NexMediator to NuGet
         run: |
-          dotnet nuget push ./nupkg/*.nupkg \
+          dotnet nuget push ./nupkg/NexMediator.*.nupkg \
             --api-key ${{ secrets.NUGET_API_KEY }} \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate

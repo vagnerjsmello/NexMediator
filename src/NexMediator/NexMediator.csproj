@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" />
+		<ProjectReference Include="..\NexMediator.Core\NexMediator.Core.csproj" />
+		<ProjectReference Include="..\NexMediator.Extensions\NexMediator.Extensions.csproj" />
+		<ProjectReference Include="..\NexMediator.Pipeline\NexMediator.Pipeline.csproj" />
+	</ItemGroup>
+</Project>
