@@ -19,6 +19,9 @@
 > Install:  
 > ```bash
 > dotnet add package NexMediator.Core
+> ````
+> ```
+> Install-Package NexMediator.Core -Version 1.0.0
 > ```
 
 ---
@@ -205,10 +208,12 @@ We welcome contributions!
 
 NexMediator is **Apache 2.0 Licensed** — free for commercial and personal use.
 
-> © 2024–2025 [NexDevBR](https://github.com/nexdevbr) | Crafted with ❤ in C#.
+> © 2024–2025 Vagner Mello ([GitHub](https://github.com/vagnerjsmello)) | Crafted with ❤ in C#.
 
 ---
 
 ## 🏷 Tags
 
 `.NET` • `C#` • `CQRS` • `Mediator` • `Open Source` • `Apache-2.0` • `NuGet` • `Clean Architecture` • `Pipeline` • `Notifications` • `Request Handling` • `Streaming` • `FluentValidation` • `Transaction` • `Expression Trees` • `Chain of Responsibility` • `Middleware` • `Microservices` • `DDD`
+
+
