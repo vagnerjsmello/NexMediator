@@ -153,7 +153,7 @@ public class NexMediatorOptions
     /// </summary>
     /// <param name="behaviors">Unordered behaviors.</param>
     /// <returns>Ordered list of behaviors.</returns>
-    internal IEnumerable<object> OrderBehaviors(IEnumerable<object> behaviors)
+    public IEnumerable<object> OrderBehaviors(IEnumerable<object> behaviors)
     {
         return behaviors.OrderBy(b =>
         {

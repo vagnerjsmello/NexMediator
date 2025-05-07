@@ -21,7 +21,7 @@ namespace NexMediator.Core.Pipeline;
 /// - Error propagation
 /// - Cancellation support
 /// </remarks>
-internal class PipelineBehaviorExecutor<TRequest, TResponse>
+public class PipelineBehaviorExecutor<TRequest, TResponse>
     where TRequest : INexRequest<TResponse>
 {
     private readonly INexRequestHandler<TRequest, TResponse> _handler;
