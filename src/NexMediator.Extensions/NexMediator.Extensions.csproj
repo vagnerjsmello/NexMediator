@@ -15,13 +15,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Scrutor" Version="6.0.1" />
-	</ItemGroup>
-
-	<PropertyGroup>
-		<PackageId>NexMediator</PackageId>
-		<Description>Lightweight CQRS mediator implementation with a configurable pipeline.</Description>
-		<PackageTags>CQRS;Mediator;DotNet;NexMediator</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
+	</ItemGroup>	
 
 </Project>

@@ -13,13 +13,6 @@
 <ItemGroup>
   <ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" />
 	<ProjectReference Include="..\NexMediator.Pipeline\NexMediator.Pipeline.csproj" />
-</ItemGroup>
-
-
-  <!--<PropertyGroup>
-    <PackageId>NexMediator.Core</PackageId>
-    <Description>Lightweight CQRS mediator implementation with a configurable pipeline.</Description>
-    <PackageTags>CQRS;Mediator;DotNet;NexMediator</PackageTags>
-  </PropertyGroup>-->
+</ItemGroup>  
 
 </Project>
