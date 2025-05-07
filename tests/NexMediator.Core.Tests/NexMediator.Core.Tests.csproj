@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -9,6 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.4" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
 		<PackageReference Include="xunit" Version="2.9.2" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
@@ -24,6 +25,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\NexMediator.Core\NexMediator.Core.csproj" />
+		<ProjectReference Include="..\..\src\NexMediator.Extensions\NexMediator.Extensions.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
