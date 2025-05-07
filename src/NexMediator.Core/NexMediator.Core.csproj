@@ -16,10 +16,10 @@
 </ItemGroup>
 
 
-  <PropertyGroup>
+  <!--<PropertyGroup>
     <PackageId>NexMediator.Core</PackageId>
     <Description>Lightweight CQRS mediator implementation with a configurable pipeline.</Description>
     <PackageTags>CQRS;Mediator;DotNet;NexMediator</PackageTags>
-  </PropertyGroup>
+  </PropertyGroup>-->
 
 </Project>

@@ -30,7 +30,7 @@ jobs:
 
       - name: Pack NuGet package
         run: |
-          dotnet pack src/NexMediator.Core/NexMediator.Core.csproj \
+          dotnet pack src/NexMediator.Extensions/NexMediator.Extensions.csproj \
             --configuration Release \
             --no-build \
             --include-symbols \

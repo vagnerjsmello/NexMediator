@@ -18,9 +18,10 @@
 	</ItemGroup>
 
 	<PropertyGroup>
-		<PackageId>NexMediator.Extensions</PackageId>
+		<PackageId>NexMediator</PackageId>
 		<Description>Lightweight CQRS mediator implementation with a configurable pipeline.</Description>
 		<PackageTags>CQRS;Mediator;DotNet;NexMediator</PackageTags>
-	</PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
 
 </Project>
