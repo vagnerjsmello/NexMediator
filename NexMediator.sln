@@ -23,13 +23,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexMediator.Pipeline.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexMediator.Extensions.Tests", "tests\NexMediator.Extensions.Tests\NexMediator.Extensions.Tests.csproj", "{41AF5883-2AF3-48A4-8BE0-0D7A489F2202}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexMediator", "src\NexMediator\NexMediator.csproj", "{C137DBBB-9739-4156-A350-79B61DA4CC4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A9D15948-66D5-4014-A1F7-9F6DA9C4ACA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -64,6 +63,13 @@ Global
 		{41AF5883-2AF3-48A4-8BE0-0D7A489F2202}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41AF5883-2AF3-48A4-8BE0-0D7A489F2202}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41AF5883-2AF3-48A4-8BE0-0D7A489F2202}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C137DBBB-9739-4156-A350-79B61DA4CC4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C137DBBB-9739-4156-A350-79B61DA4CC4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C137DBBB-9739-4156-A350-79B61DA4CC4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C137DBBB-9739-4156-A350-79B61DA4CC4B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A9D15948-66D5-4014-A1F7-9F6DA9C4ACA6} = {52AF6B78-014F-4B08-AEC9-C015183AB47C}
@@ -74,5 +80,6 @@ Global
 		{25AC6C79-2EAB-4C28-B7D4-136FD76E211D} = {831C87DA-46A1-40D2-9583-3CC7B435CE27}
 		{85A5830A-E11C-470F-A2CF-A5DDD3583AD0} = {831C87DA-46A1-40D2-9583-3CC7B435CE27}
 		{41AF5883-2AF3-48A4-8BE0-0D7A489F2202} = {831C87DA-46A1-40D2-9583-3CC7B435CE27}
+		{C137DBBB-9739-4156-A350-79B61DA4CC4B} = {52AF6B78-014F-4B08-AEC9-C015183AB47C}
 	EndGlobalSection
 EndGlobal

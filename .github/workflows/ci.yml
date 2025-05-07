@@ -5,13 +5,14 @@ on:
     branches:
       - main
       - develop
+      - 'feature/**'
   pull_request:
     branches:
       - develop
 
 jobs:
   build-and-test:
-    name: Build and Test
+    name: Build, Test & Pack
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +28,13 @@ jobs:
         run: dotnet restore
 
       - name: Build solution
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build -c Release --no-restore
 
       - name: Run tests
-        run: dotnet test --configuration Release --no-build --verbosity normal
+        run: dotnet test -c Release --no-build --verbosity normal
+
+      - name: Pack NexMediator meta-package
+        run: dotnet pack src/NexMediator/NexMediator.csproj -c Release --no-build -o ./nupkg
+
+      - name: List package artifacts
+        run: ls ./nupkg
