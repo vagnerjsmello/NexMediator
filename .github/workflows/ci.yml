@@ -24,28 +24,17 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Cache NuGet packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Build.props') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build solution
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build -c Release --no-restore
 
       - name: Run tests
-        run: dotnet test --configuration Release --no-build --verbosity normal
+        run: dotnet test -c Release --no-build --verbosity normal
 
-      - name: Pack meta-package
-        run: dotnet pack src/NexMediator/NexMediator.csproj \
-              --configuration Release \
-              --no-build \
-              --output ./nupkg
+      - name: Pack NexMediator meta-package
+        run: dotnet pack src/NexMediator/NexMediator.csproj -c Release --no-build -o ./nupkg
 
       - name: List package artifacts
-        run: ls src/NexMediator/nupkg
+        run: ls ./nupkg
