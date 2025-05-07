@@ -13,8 +13,7 @@
 
 
 <ItemGroup>
-  <ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" />
-  <ProjectReference Include="..\NexMediator.Core\NexMediator.Core.csproj" />
+  <ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" />  
 </ItemGroup>
 
 

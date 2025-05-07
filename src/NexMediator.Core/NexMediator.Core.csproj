@@ -12,6 +12,7 @@
 
 <ItemGroup>
   <ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" />
+	<ProjectReference Include="..\NexMediator.Pipeline\NexMediator.Pipeline.csproj" />
 </ItemGroup>
 
 
