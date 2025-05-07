@@ -1,4 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<IncludeReferencedProjects>true</IncludeReferencedProjects>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" />
 		<ProjectReference Include="..\NexMediator.Core\NexMediator.Core.csproj" />
