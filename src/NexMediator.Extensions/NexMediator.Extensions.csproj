@@ -1,22 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-<ItemGroup>
-  <ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" />
-  <ProjectReference Include="..\NexMediator.Core\NexMediator.Core.csproj" />
-  <ProjectReference Include="..\NexMediator.Pipeline\NexMediator.Pipeline.csproj" />
-</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" />
+		<ProjectReference Include="..\NexMediator.Core\NexMediator.Core.csproj" />
+		<ProjectReference Include="..\NexMediator.Pipeline\NexMediator.Pipeline.csproj" />
+	</ItemGroup>
 
 
-  <PropertyGroup>
-    <PackageId>NexMediator.Extensions</PackageId>
-    <Description>Lightweight CQRS mediator implementation with a configurable pipeline.</Description>
-    <PackageTags>CQRS;Mediator;DotNet;NexMediator</PackageTags>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Scrutor" Version="6.0.1" />
+	</ItemGroup>	
 
 </Project>

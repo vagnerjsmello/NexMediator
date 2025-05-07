@@ -6,12 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-
-
-  <PropertyGroup>
-    <PackageId>NexMediator.Abstractions</PackageId>
-    <Description>Lightweight CQRS mediator implementation with a configurable pipeline.</Description>
-    <PackageTags>CQRS;Mediator;DotNet;NexMediator</PackageTags>
-  </PropertyGroup>
-
 </Project>
