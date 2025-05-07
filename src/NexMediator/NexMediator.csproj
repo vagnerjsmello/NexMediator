@@ -2,19 +2,13 @@
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+		<IncludeReferencedProjects>true</IncludeReferencedProjects>
 	</PropertyGroup>
-
+	
 	<ItemGroup>
 		<ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" />
 		<ProjectReference Include="..\NexMediator.Core\NexMediator.Core.csproj" />
+		<ProjectReference Include="..\NexMediator.Extensions\NexMediator.Extensions.csproj" />
 		<ProjectReference Include="..\NexMediator.Pipeline\NexMediator.Pipeline.csproj" />
 	</ItemGroup>
-
-
-	<ItemGroup>
-		<PackageReference Include="Scrutor" Version="6.0.1" />
-	</ItemGroup>	
-
 </Project>
