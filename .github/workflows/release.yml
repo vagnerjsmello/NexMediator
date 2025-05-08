@@ -6,7 +6,7 @@ on:
       - 'v*.*.*'   # ex: v1.0.5
 
 jobs:
-  release:    
+  release:
     runs-on: windows-latest
 
     steps:
@@ -19,8 +19,7 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Extract version
-        run: |
-          echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $Env:GITHUB_ENV
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $Env:GITHUB_ENV
 
       - name: Build all projects
         run: dotnet build --configuration Release
@@ -30,11 +29,11 @@ jobs:
         run: |
           nuget pack NexMediator.nuspec `
             -BasePath . `
-            -OutputDirectory ..\NexMediatorNugetPackage
+            -OutputDirectory ../NexMediatorNugetPackage
 
       - name: Publish to NuGet.org
         run: |
-          dotnet nuget push NexMediatorNugetPackage\NexMediator.$Env:VERSION.nupkg `
+          dotnet nuget push src/NexMediator/NexMediatorNugetPackage/NexMediator.$Env:VERSION.nupkg `
             --api-key ${{ secrets.NUGET_API_KEY }} `
             --source https://api.nuget.org/v3/index.json `
             --skip-duplicate
