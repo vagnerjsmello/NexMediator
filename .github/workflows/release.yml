@@ -3,11 +3,10 @@ name: Release & Publish to NuGet
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*.*.*'   # ex: v1.0.3
 
 jobs:
   release:
-    name: Publish Meta-Package to NuGet
     runs-on: ubuntu-latest
 
     steps:
@@ -19,25 +18,25 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Extract version from tag
-        run: echo "PACKAGE_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+      - name: Extract version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build solution
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build -c Release --no-restore
 
       - name: Pack NexMediator meta-package
         run: |
           dotnet pack src/NexMediator/NexMediator.csproj \
-            --configuration Release \
+            -c Release \
             --no-build \
             --include-symbols \
-            /p:PackageVersion=${PACKAGE_VERSION} \
-            --output ./nupkg
+            /p:PackageVersion=${VERSION} \
+            -o ./nupkg
 
-      - name: Publish NexMediator to NuGet
+      - name: Publish to NuGet
         run: |
           dotnet nuget push ./nupkg/NexMediator.*.nupkg \
             --api-key ${{ secrets.NUGET_API_KEY }} \
