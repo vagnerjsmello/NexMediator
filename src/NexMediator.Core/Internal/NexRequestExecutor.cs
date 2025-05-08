@@ -62,8 +62,8 @@ internal static class NexRequestExecutor
             var wrappedCall = Expression.Call(wrapMethod, callExecute);
 
             // Final delegate: (object, IServiceProvider, CancellationToken) => WrapTask(Execute(...))
-            var lambda = Expression.Lambda<Func<object, IServiceProvider, CancellationToken, 
-                Task<object>>>(wrappedCall,requestParam,providerParam,tokenParam);
+            var lambda = Expression.Lambda<Func<object, IServiceProvider, CancellationToken,
+                Task<object>>>(wrappedCall, requestParam, providerParam, tokenParam);
 
             return lambda.Compile();
         });

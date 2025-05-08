@@ -1,7 +1,7 @@
-﻿using System.Collections.Concurrent;
-using System.Linq.Expressions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NexMediator.Abstractions.Interfaces;
+using System.Collections.Concurrent;
+using System.Linq.Expressions;
 
 
 namespace NexMediator.Core.Internal;
