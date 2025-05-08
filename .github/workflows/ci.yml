@@ -12,7 +12,7 @@ on:
 
 jobs:
   build-and-test:
-    name: Build, Test & Pack
+    name: Build & Test
     runs-on: ubuntu-latest
 
     steps:
@@ -28,13 +28,7 @@ jobs:
         run: dotnet restore
 
       - name: Build solution
-        run: dotnet build -c Release --no-restore
+        run: dotnet build --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test -c Release --no-build --verbosity normal
-
-      - name: Pack NexMediator meta-package
-        run: dotnet pack src/NexMediator/NexMediator.csproj -c Release --no-build -o ./nupkg
-
-      - name: List package artifacts
-        run: ls ./nupkg
+        run: dotnet test --configuration Release --no-build --verbosity normal
