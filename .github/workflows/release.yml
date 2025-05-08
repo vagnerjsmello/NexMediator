@@ -1,9 +1,9 @@
-name: Release & Publish to NuGet
+name: Release & Publish via .nuspec
 
 on:
   push:
     tags:
-      - 'v*.*.*'   # ex: v1.0.3
+      - 'v*.*.*'   # ex: v1.0.5
 
 jobs:
   release:
@@ -21,24 +21,25 @@ jobs:
       - name: Extract version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
-      - name: Restore dependencies
-        run: dotnet restore
+      - name: Build all projects
+        run: dotnet build --configuration Release
 
-      - name: Build solution
-        run: dotnet build -c Release --no-restore
+      - name: Install NuGet CLI
+        run: dotnet tool install --global NuGet.CommandLine --version 6.*
 
-      - name: Pack NexMediator meta-package
+      - name: Add NuGet CLI to PATH
+        run: echo "${{ runner.tool_cache }}/dotnet-tools/bin" >> $GITHUB_PATH
+
+      - name: Pack with .nuspec
+        working-directory: src/NexMediator
         run: |
-          dotnet pack src/NexMediator/NexMediator.csproj \
-            -c Release \
-            --no-build \
-            --include-symbols \
-            /p:PackageVersion=${VERSION} \
-            -o ./nupkg
+          nuget pack NexMediator.nuspec \
+            -BasePath . \
+            -OutputDirectory ../NexMediatorNugetPackage
 
-      - name: Publish to NuGet
+      - name: Publish to NuGet.org
         run: |
-          dotnet nuget push ./nupkg/NexMediator.*.nupkg \
+          dotnet nuget push NexMediatorNugetPackage/NexMediator.${VERSION}.nupkg \
             --api-key ${{ secrets.NUGET_API_KEY }} \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
