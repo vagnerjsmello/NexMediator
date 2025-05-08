@@ -15,7 +15,7 @@
 
 ![NuGet NexMediator](https://img.shields.io/nuget/v/NexMediator?style=flat-square)
 
-NuGet: [NexMediator](https://www.nuget.org/packages/NexMediator)  
+NuGet: [NexMediator](https://www.nuget.org/packages/NexMediator/)  
 
 Install via cli:  
 > ```bash
@@ -24,7 +24,7 @@ Install via cli:
 
 Install via package manager:
 > ```bash
-> NuGet\Install-Package NexMediator
+> NuGet\Install-Package NexMediator 
 > ```
 
 ---
