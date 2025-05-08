@@ -13,18 +13,18 @@
 ![Tested with: TDD](https://img.shields.io/badge/Tested%20with-TDD-success?style=flat-square)
 
 
-![NuGet](https://img.shields.io/nuget/v/NexMediator.Core?style=flat-square)
+![NuGet NexMediator](https://img.shields.io/nuget/v/NexMediator?style=flat-square)
 
-NuGet: [NexMediator.Core](https://www.nuget.org/packages/NexMediator.Core/)  
+NuGet: [NexMediator](https://www.nuget.org/packages/NexMediator/1.0.0)  
 
-Install via VSCode:  
+Install via cli:  
 > ```bash
-> dotnet add package NexMediator.Core
+> dotnet add package NexMediator --version 1.0.0
 > ```
 
-Install via Visual Studio:
+Install via package manager:
 > ```bash
-> Install-Package NexMediator.Core -Version 1.0.0
+> NuGet\Install-Package NexMediator -Version 1.0.0
 > ```
 
 ---
@@ -42,7 +42,6 @@ Install via Visual Studio:
 - [🤝 Contributing](#-contributing)
 - [📄 License](#-license)
 
----
 
 ## ✨ About NexMediator
 
@@ -58,7 +57,6 @@ Install via Visual Studio:
 
 Inspired by the **CQRS** pattern, it enables clean separation between commands, queries, and side effects — without adding runtime overhead.
 
----
 
 ## 💡 Name Inspiration
 
@@ -75,7 +73,7 @@ Inspired by the **CQRS** pattern, it enables clean separation between commands, 
 
 Together: **NexMediator** → a clean and powerful orchestration layer for modern .NET apps.
 
----
+
 
 ## 🚀 Features
 
@@ -87,7 +85,7 @@ Together: **NexMediator** → a clean and powerful orchestration layer for moder
 - 🔐 Full support for **dependency injection** and **scoped lifetimes**
 - 🧪 Designed for **testability** and **modularization**
 
----
+
 
 ## 🧱 Core Concepts
 
@@ -102,7 +100,7 @@ Together: **NexMediator** → a clean and powerful orchestration layer for moder
 | `INexStreamRequest<T>`       | Request type that supports `IAsyncEnumerable<T>` streaming                  |
 | `INexPipelineBehavior<T,R>`  | Middleware for cross-cutting concerns                                       |
 
----
+
 
 ## ⚙️ Pipeline Behaviors
 
@@ -118,7 +116,7 @@ Built-in behaviors:
 INexPipelineBehavior<TRequest, TResponse>
 ```
 
----
+
 
 ## 🛠 Setup & Configuration
 
@@ -182,7 +180,59 @@ public class FetchEventsHandler : INexStreamRequestHandler<FetchEvents, EventDat
 }
 ```
 
----
+## 🔒 Transactional Request
+
+Requests that implement `ITransactionalRequest<TResponse>` will be executed within a transactional scope (e.g., database transaction). If the handler fails, changes are rolled back automatically.
+
+```csharp
+public class UpdateUserCommand : ITransactionalRequest<UserResult>
+{
+    public int Id { get; init; }
+    public string NewEmail { get; init; }
+}
+
+public class UpdateUserHandler : INexRequestHandler<UpdateUserCommand, UserResult>
+{
+    public async Task<UserResult> Handle(UpdateUserCommand command, CancellationToken ct)
+    {
+        // Changes will run inside a transaction
+    }
+}
+```
+
+## 📦 Cacheable Request
+
+Implement `ICacheableRequest<TResponse>` to enable response-level caching with automatic keying and expiration control.
+
+```csharp
+public class GetUserProfileQuery : ICacheableRequest<UserProfile>
+{
+    public int UserId { get; init; }
+
+    public string CacheKey => $"UserProfile:{UserId}";
+    public TimeSpan? Expiration => TimeSpan.FromMinutes(15);
+}
+```
+
+## 🧹 Invalidate Cache
+
+Use `IInvalidateCacheableRequest` to remove cache entries when executing a state-changing command. Useful for cache coherence after updates.
+
+```csharp
+public class UpdateUserCommand : ITransactionalRequest<UserResult>, IInvalidateCacheableRequest
+{
+    public int Id { get; init; }
+    public string NewEmail { get; init; }
+
+    public IReadOnlyCollection<string> KeysToInvalidate => new[]
+    {
+        $"UserProfile:{Id}"
+    };
+}
+```
+
+> 💡 Combine `ITransactionalRequest` + `IInvalidateCacheableRequest` to ensure cache invalidation only happens after successful transaction commit.
+
 
 ## 📚 Docs
 
@@ -190,6 +240,7 @@ NexMediator is modularized in the following packages:
 
 | Package                            | Description                              |
 |-----------------------------------|------------------------------------------|
+| `NexMediator`                     | Package meta for Nuget                   |
 | `NexMediator.Core`                | Main mediator engine                     |
 | `NexMediator.Abstractions`        | Contracts for requests, handlers, etc.   |
 | `NexMediator.Extensions`          | DI helpers for registration              |
@@ -197,7 +248,7 @@ NexMediator is modularized in the following packages:
 
 📖 Full documentation is available in the `/docs` folder or project wiki (coming soon).
 
----
+
 
 ## 🤝 Contributing
 
@@ -213,15 +264,12 @@ We welcome contributions!
 - `develop` – integrates all new features  
 - `feature/*` – work in progress branches
 
----
-
 ## 📄 License
 
 NexMediator is **Apache 2.0 Licensed** — free for commercial and personal use.
 
 > © 2024–2025 Vagner Mello | ([GitHub Profile](https://github.com/vagnerjsmello)) | ([LinkeIn Profile](https://linkedin/in/vagnerjsmello)) | Crafted with ❤ in C#.
 
----
 
 ## 🏷 Tags
 
