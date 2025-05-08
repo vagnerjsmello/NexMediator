@@ -3,7 +3,7 @@ name: Release & Publish via .nuspec
 on:
   push:
     tags:
-      - 'v*.*.*'   # ex: v1.0.5
+      - 'v*.*.*'   # e.g. v1.0.5
 
 jobs:
   release:
@@ -13,12 +13,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup .NET SDK
+      - name: Setup .NET 8.0 SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
 
-      - name: Extract version
+      - name: Extract version from tag
         shell: powershell
         run: |
           $ver = $Env:GITHUB_REF -replace 'refs/tags/v',''
@@ -28,15 +28,14 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Pack with .nuspec
-        working-directory: src\NexMediator
-        run: nuget pack NexMediator.nuspec `
-              -BasePath . `
-              -OutputDirectory NexMediatorNugetPackage
+        run: |
+          nuget pack src\NexMediator\NexMediator.nuspec `
+            -BasePath src\NexMediator `
+            -OutputDirectory nupkg
 
       - name: Publish to NuGet.org
-        shell: powershell
         run: |
-          dotnet nuget push "src\NexMediator\NexMediatorNugetPackage\NexMediator.$Env:VERSION.nupkg" `
+          dotnet nuget push nupkg\NexMediator.${{ env.VERSION }}.nupkg `
             --api-key ${{ secrets.NUGET_API_KEY }} `
             --source https://api.nuget.org/v3/index.json `
             --skip-duplicate
