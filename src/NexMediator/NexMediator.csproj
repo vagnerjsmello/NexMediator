@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
+	<PropertyGroup>		
 		<TargetFramework>net8.0</TargetFramework>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IncludeReferencedProjects>true</IncludeReferencedProjects>
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" />
-		<ProjectReference Include="..\NexMediator.Core\NexMediator.Core.csproj" />
 		<ProjectReference Include="..\NexMediator.Extensions\NexMediator.Extensions.csproj" />
+		<ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" />
 		<ProjectReference Include="..\NexMediator.Pipeline\NexMediator.Pipeline.csproj" />
+		<ProjectReference Include="..\NexMediator.Core\NexMediator.Core.csproj" />
 	</ItemGroup>
 </Project>
