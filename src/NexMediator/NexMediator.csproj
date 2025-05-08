@@ -1,23 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IncludeReferencedProjects>true</IncludeReferencedProjects>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
-
 		<None Include="README.md">
 			<Pack>true</Pack>
 			<PackagePath></PackagePath>
 		</None>
+	</ItemGroup>
 
-		<ProjectReference Include="..\NexMediator.Extensions\NexMediator.Extensions.csproj" />
-		<ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" />
-		<ProjectReference Include="..\NexMediator.Pipeline\NexMediator.Pipeline.csproj" />
-		<ProjectReference Include="..\NexMediator.Core\NexMediator.Core.csproj" />
+	<ItemGroup>
+		<ProjectReference Include="..\NexMediator.Abstractions\NexMediator.Abstractions.csproj" Pack="true" />
+		<ProjectReference Include="..\NexMediator.Core\NexMediator.Core.csproj"                 Pack="true" />
+		<ProjectReference Include="..\NexMediator.Pipeline\NexMediator.Pipeline.csproj"         Pack="true" />
+		<ProjectReference Include="..\NexMediator.Extensions\NexMediator.Extensions.csproj"     Pack="true" />
 	</ItemGroup>
 </Project>

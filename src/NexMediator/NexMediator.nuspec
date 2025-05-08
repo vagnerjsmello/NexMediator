@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<package>
+	<metadata>
+		<!-- Identify -->
+		<id>NexMediator</id>
+		<version>1.0.5</version>
+		<authors>Vagner Mello</authors>
+		<owners>Vagner Mello</owners>
+
+		<!-- License -->
+		<license type="expression">Apache-2.0</license>
+
+		<!-- Descriptions -->
+		<description>Lightweight CQRS mediator implementation with a configurable pipeline.</description>
+		<readme>README.md</readme>
+		<summary>Lightweight CQRS mediator implementation with a configurable pipeline.</summary>
+		<releaseNotes>Initial 1.0.5 release with embedded DLLs of all sub-projects.</releaseNotes>
+
+		<!-- Tags -->
+		<tags>CQRS Mediator DotNet NexMediator</tags>
+
+		<!-- URLs -->
+		<projectUrl>https://github.com/vagnerjsmello/NexMediator</projectUrl>
+		<repository type="git" url="https://github.com/vagnerjsmello/NexMediator" />
+
+		<!-- Dependencies -->
+		<dependencies>
+			<group targetFramework="net8.0" />
+		</dependencies>
+	</metadata>
+
+	<files>
+		<!-- DLLs -->
+		<file src="..\NexMediator.Abstractions\bin\Release\net8.0\NexMediator.Abstractions.dll" target="lib\net8.0" />
+		<file src="..\NexMediator.Core\bin\Release\net8.0\NexMediator.Core.dll"					target="lib\net8.0" />
+		<file src="..\NexMediator.Pipeline\bin\Release\net8.0\NexMediator.Pipeline.dll"			target="lib\net8.0" />
+		<file src="..\NexMediator.Extensions\bin\Release\net8.0\NexMediator.Extensions.dll"		target="lib\net8.0" />
+
+		<!-- Meta-project dll -->
+		<file src="bin\Release\net8.0\NexMediator.dll" target="lib\net8.0" />
+		
+		<!-- README  -->
+		<file src="README.md" target="" />
+	</files>
+</package>
