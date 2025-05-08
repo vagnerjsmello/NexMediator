@@ -19,21 +19,24 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Extract version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $Env:GITHUB_ENV
+        shell: powershell
+        run: |
+          $ver = $Env:GITHUB_REF -replace 'refs/tags/v',''
+          echo "VERSION=$ver" >> $Env:GITHUB_ENV
 
       - name: Build all projects
         run: dotnet build --configuration Release
 
       - name: Pack with .nuspec
         working-directory: src\NexMediator
-        run: |
-          nuget pack NexMediator.nuspec `
-            -BasePath . `
-            -OutputDirectory ../NexMediatorNugetPackage
+        run: nuget pack NexMediator.nuspec `
+              -BasePath . `
+              -OutputDirectory NexMediatorNugetPackage
 
       - name: Publish to NuGet.org
+        shell: powershell
         run: |
-          dotnet nuget push src/NexMediator/NexMediatorNugetPackage/NexMediator.$Env:VERSION.nupkg `
+          dotnet nuget push "src\NexMediator\NexMediatorNugetPackage\NexMediator.$Env:VERSION.nupkg" `
             --api-key ${{ secrets.NUGET_API_KEY }} `
             --source https://api.nuget.org/v3/index.json `
             --skip-duplicate
