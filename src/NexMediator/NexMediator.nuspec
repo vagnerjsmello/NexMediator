@@ -3,17 +3,24 @@
 	<metadata>
 		<!-- Identify -->
 		<id>NexMediator</id>
-		<version>1.0.5</version>
+		<version>1.0.6</version>
 		<authors>Vagner Mello</authors>
 		<owners>Vagner Mello</owners>
+		<icon>icon.png</icon>
 
 		<!-- License -->
 		<license type="expression">Apache-2.0</license>
 
 		<!-- Descriptions -->
-		<description>Lightweight CQRS mediator implementation with a configurable pipeline.</description>
+		<summary>Modern, high-performance .NET mediator with extensible CQRS pipelines and built-in behaviors.</summary>
+		<description>
+			NexMediator is a clean, high-performance mediator library for .NET 8.0 that empowers CQRS-based architectures
+			with asynchronous request/response, parallel notifications, and streaming support.
+			Its fully pluggable pipeline lets you inject logging, validation, caching, transactions, and more—
+			all powered by compiled delegates (no reflection at runtime) and first-class dependency injection support.
+			Ideal for microservices, DDD, and testable, modular applications.
+		</description>
 		<readme>README.md</readme>
-		<summary>Lightweight CQRS mediator implementation with a configurable pipeline.</summary>
 		<releaseNotes>Initial 1.0.5 release with embedded DLLs of all sub-projects.</releaseNotes>
 
 		<!-- Tags -->
@@ -25,10 +32,14 @@
 
 		<!-- Dependencies -->
 		<dependencies>
-			<group targetFramework="net8.0" />
+			<group targetFramework="net8.0">
+				<dependency id="Microsoft.Extensions.DependencyInjection"     version="8.0.1" />
+				<dependency id="Scrutor"                                      version="6.0.1" />
+				<dependency id="Microsoft.Extensions.Logging.Abstractions"    version="8.0.3" />
+				<dependency id="FluentValidation"                             version="12.0.0" />
+			</group>
 		</dependencies>
 	</metadata>
-
 	<files>
 		<!-- DLLs -->
 		<file src="..\NexMediator.Abstractions\bin\Release\net8.0\NexMediator.Abstractions.dll" target="lib\net8.0" />
@@ -39,7 +50,10 @@
 		<!-- Meta-project dll -->
 		<file src="bin\Release\net8.0\NexMediator.dll" target="lib\net8.0" />
 		
-		<!-- README  -->
+		<!-- Readme  -->
 		<file src="README.md" target="" />
+		
+		<!-- Icon  -->
+		<file src="icon.png" target="" />
 	</files>
 </package>
