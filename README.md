@@ -158,7 +158,7 @@ public class CreateOrderHandler : INexRequestHandler<CreateOrder, OrderResult>
 }
 ```
 
-### 📥 Query
+### Query
 ```csharp
 public class GetUserProfileQuery : INexQuery<UserProfile>
 {
@@ -196,12 +196,12 @@ public class FetchEventsHandler : INexStreamRequestHandler<FetchEvents, EventDat
 }
 ```
 
-## 🔒 Transactional Request
+### Transactional Request
 
 Requests that implement `ITransactionalRequest<TResponse>` will be executed within a transactional scope (e.g., database transaction). If the handler fails, changes are rolled back automatically.
 
 ```csharp
-public class UpdateUserCommand : ITransactionalRequest<UserResult>
+public class UpdateUserCommand : INexCommand<UserResult>, ITransactionalRequest<UserResult>
 {
     public int Id { get; init; }
     public string NewEmail { get; init; }
@@ -216,7 +216,7 @@ public class UpdateUserHandler : INexRequestHandler<UpdateUserCommand, UserResul
 }
 ```
 
-## 📦 Cacheable Request 
+### Cacheable Request 
 
 Implement `ICacheableRequest<TResponse>` to enable response-level caching with automatic keying and expiration control.
 
@@ -230,12 +230,12 @@ public class GetUserProfileQuery : INexQuery<UserProfile>, ICacheableRequest<Use
 }
 ```
 
-## 🧹 Invalidate Cache
+### 🧹 Invalidate Cache
 
 Use `IInvalidateCacheableRequest` to remove cache entries when executing a state-changing command. Useful for cache coherence after updates.
 
 ```csharp
-public class UpdateUserCommand : ITransactionalRequest<UserResult>, IInvalidateCacheableRequest
+public class UpdateUserCommand : INexCommand<UserResult>, ITransactionalRequest<UserResult>, IInvalidateCacheableRequest
 {
     public int Id { get; init; }
     public string NewEmail { get; init; }
