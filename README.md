@@ -158,6 +158,22 @@ public class CreateOrderHandler : INexRequestHandler<CreateOrder, OrderResult>
 }
 ```
 
+### 📥 Query
+```csharp
+public class GetUserProfileQuery : INexQuery<UserProfile>
+{
+    public int UserId { get; init; }
+}
+
+public class GetUserProfileHandler : INexRequestHandler<GetUserProfileQuery, UserProfile>
+{
+    public async Task<UserProfile> Handle(GetUserProfileQuery query, CancellationToken ct)
+    {
+        // Fetch and return user profile without side effects
+    }
+}
+
+
 ### Notification
 ```csharp
 public class OrderCreated : INexNotification { ... }
@@ -200,12 +216,12 @@ public class UpdateUserHandler : INexRequestHandler<UpdateUserCommand, UserResul
 }
 ```
 
-## 📦 Cacheable Request
+## 📦 Cacheable Request 
 
 Implement `ICacheableRequest<TResponse>` to enable response-level caching with automatic keying and expiration control.
 
 ```csharp
-public class GetUserProfileQuery : ICacheableRequest<UserProfile>
+public class GetUserProfileQuery : INexQuery<UserProfile>, ICacheableRequest<UserProfile>
 {
     public int UserId { get; init; }
 
