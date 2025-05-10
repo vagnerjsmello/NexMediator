@@ -146,6 +146,9 @@ services.AddNexMediator(options =>
 ## 📦 Example Usage
 
 ### Command
+
+Use `INexCommand<TResponse>` to define operations that **change application state**, such as creating, updating, or deleting data.
+
 ```csharp
 public class CreateOrder : INexCommand<OrderResult> { ... }
 
@@ -158,7 +161,10 @@ public class CreateOrderHandler : INexRequestHandler<CreateOrder, OrderResult>
 }
 ```
 
-### 📥 Query
+### Query
+
+Use `INexQuery<TResponse>` for read-only operations that do not mutate state, commonly used for data retrieval.
+
 ```csharp
 public class GetUserProfileQuery : INexQuery<UserProfile>
 {
@@ -172,9 +178,12 @@ public class GetUserProfileHandler : INexRequestHandler<GetUserProfileQuery, Use
         // Fetch and return user profile without side effects
     }
 }
-
+```
 
 ### Notification
+
+Use `INexNotification` for event-style messages that are broadcasted to one or many handlers without expecting a response.
+
 ```csharp
 public class OrderCreated : INexNotification { ... }
 
@@ -184,6 +193,9 @@ public class EmailNotifier : INexNotificationHandler<OrderCreated> { ... }
 ```
 
 ### Stream Request
+
+Use `INexStreamRequest<T>` when you need to yield multiple results asynchronously, like paged or real-time data.
+
 ```csharp
 public class FetchEvents : INexStreamRequest<EventData> { ... }
 
@@ -196,12 +208,12 @@ public class FetchEventsHandler : INexStreamRequestHandler<FetchEvents, EventDat
 }
 ```
 
-## 🔒 Transactional Request
+### Transactional Request
 
 Requests that implement `ITransactionalRequest<TResponse>` will be executed within a transactional scope (e.g., database transaction). If the handler fails, changes are rolled back automatically.
 
 ```csharp
-public class UpdateUserCommand : ITransactionalRequest<UserResult>
+public class UpdateUserCommand : INexCommand<UserResult>, ITransactionalRequest<UserResult>
 {
     public int Id { get; init; }
     public string NewEmail { get; init; }
@@ -216,7 +228,7 @@ public class UpdateUserHandler : INexRequestHandler<UpdateUserCommand, UserResul
 }
 ```
 
-## 📦 Cacheable Request 
+### Cacheable Request 
 
 Implement `ICacheableRequest<TResponse>` to enable response-level caching with automatic keying and expiration control.
 
@@ -230,12 +242,12 @@ public class GetUserProfileQuery : INexQuery<UserProfile>, ICacheableRequest<Use
 }
 ```
 
-## 🧹 Invalidate Cache
+### 🧹 Invalidate Cache
 
 Use `IInvalidateCacheableRequest` to remove cache entries when executing a state-changing command. Useful for cache coherence after updates.
 
 ```csharp
-public class UpdateUserCommand : ITransactionalRequest<UserResult>, IInvalidateCacheableRequest
+public class UpdateUserCommand : INexCommand<UserResult>, ITransactionalRequest<UserResult>, IInvalidateCacheableRequest
 {
     public int Id { get; init; }
     public string NewEmail { get; init; }
