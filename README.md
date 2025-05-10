@@ -146,6 +146,9 @@ services.AddNexMediator(options =>
 ## 📦 Example Usage
 
 ### Command
+
+Use `INexCommand<TResponse>` to define operations that **change application state**, such as creating, updating, or deleting data.
+
 ```csharp
 public class CreateOrder : INexCommand<OrderResult> { ... }
 
@@ -159,6 +162,9 @@ public class CreateOrderHandler : INexRequestHandler<CreateOrder, OrderResult>
 ```
 
 ### Query
+
+Use `INexQuery<TResponse>` for read-only operations that do not mutate state, commonly used for data retrieval.
+
 ```csharp
 public class GetUserProfileQuery : INexQuery<UserProfile>
 {
@@ -172,9 +178,12 @@ public class GetUserProfileHandler : INexRequestHandler<GetUserProfileQuery, Use
         // Fetch and return user profile without side effects
     }
 }
-
+```
 
 ### Notification
+
+Use `INexNotification` for event-style messages that are broadcasted to one or many handlers without expecting a response.
+
 ```csharp
 public class OrderCreated : INexNotification { ... }
 
@@ -184,6 +193,9 @@ public class EmailNotifier : INexNotificationHandler<OrderCreated> { ... }
 ```
 
 ### Stream Request
+
+Use `INexStreamRequest<T>` when you need to yield multiple results asynchronously, like paged or real-time data.
+
 ```csharp
 public class FetchEvents : INexStreamRequest<EventData> { ... }
 
