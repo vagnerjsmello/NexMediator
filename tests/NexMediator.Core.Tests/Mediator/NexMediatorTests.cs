@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
+using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NexMediator.Abstractions.Interfaces;
 using NexMediator.Core.Tests.Helpers;
@@ -12,7 +12,7 @@ using System.Reflection;
 namespace NexMediator.Core.Tests.Mediator;
 
 /// <summary>
-/// Integration tests for NexMediator covering Send, Publish, Stream behaviors and exception handling.
+/// Integration tests for DefaultNexMediator covering Send, Publish, Stream, and options validation.
 /// </summary>
 public class NexMediatorTests
 {
@@ -28,68 +28,58 @@ public class NexMediatorTests
     }
 
     /// <summary>
-    /// Ensures that DefaultNexMediator throws ArgumentNullException when required dependencies are null.
-    /// Logger is allowed to be null.
+    /// Ctor: given null provider or options, throws ArgumentNullException.
     /// </summary>
     [Fact]
-    public void Constructor_Should_Throw_When_Required_Arguments_Are_Null()
+    public void Ctor_GivenNullProviderOrOptions_ThrowsArgumentNullException()
     {
         var services = new ServiceCollection();
         var options = new NexMediatorOptions(services);
         var provider = services.BuildServiceProvider();
-        var logger = Mock.Of<ILogger<DefaultNexMediator>>();
 
-        Assert.Throws<ArgumentNullException>(() => new DefaultNexMediator(null!, logger, options));
-        Assert.Throws<ArgumentNullException>(() => new DefaultNexMediator(provider, logger, null!));
+        Assert.Throws<ArgumentNullException>(() => new DefaultNexMediator(null!, options));
+        Assert.Throws<ArgumentNullException>(() => new DefaultNexMediator(provider, null!));
     }
 
     /// <summary>
-    /// Ensures that Send throws NullReferenceException when a proxy handler returns null Task.
+    /// Send: given proxy handler returns null Task, throws RuntimeBinderException.
     /// </summary>
     [Fact]
-    public async Task Send_Should_Throw_NullReference_When_Proxy_Handler_Returns_Null()
+    public async Task Send_GivenProxyHandlerReturnsNullTask_ThrowsRuntimeBinderException()
     {
         var request = new CachedRequest();
-
         var proxy = DispatchProxy.Create<INexRequestHandler<CachedRequest, SampleResponse>, InvalidHandlerProxy>();
 
         var provider = BuildConfiguredServices(services =>
-        {
-            services.AddSingleton<INexRequestHandler<CachedRequest, SampleResponse>>(proxy);
-        });
-
+            services.AddSingleton<INexRequestHandler<CachedRequest, SampleResponse>>(proxy)
+        );
         var mediator = provider.GetRequiredService<INexMediator>();
 
-        var act = () => mediator.Send<SampleResponse>(request);
-
-        await act.Should().ThrowAsync<NullReferenceException>();
+        Func<Task> act = () => mediator.Send<SampleResponse>(request);
+        await act.Should().ThrowAsync<RuntimeBinderException>();
     }
 
     /// <summary>
-    /// Ensures that Send throws NullReferenceException when a reflection-invoked handler returns null.
+    /// Send: given reflection handler returns null, throws RuntimeBinderException.
     /// </summary>
     [Fact]
-    public async Task Send_Should_Throw_NullReference_When_Reflection_Handler_Returns_Null()
+    public async Task Send_GivenReflectionHandlerReturnsNull_ThrowsRuntimeBinderException()
     {
         var request = new CachedRequest();
-
         var provider = BuildConfiguredServices(services =>
-        {
-            services.AddSingleton<INexRequestHandler<CachedRequest, SampleResponse>, ReflectionNullHandler>();
-        });
-
+            services.AddSingleton<INexRequestHandler<CachedRequest, SampleResponse>, ReflectionNullHandler>()
+        );
         var mediator = provider.GetRequiredService<INexMediator>();
 
-        var act = () => mediator.Send<SampleResponse>(request);
-
-        await act.Should().ThrowAsync<NullReferenceException>();
+        Func<Task> act = () => mediator.Send<SampleResponse>(request);
+        await act.Should().ThrowAsync<RuntimeBinderException>();
     }
 
     /// <summary>
-    /// Ensures that Send throws NullReferenceException when a pipeline behavior created via proxy returns null.
+    /// Send: given proxy behavior returns null, throws RuntimeBinderException.
     /// </summary>
     [Fact]
-    public async Task Send_Should_Throw_NullReference_When_Proxy_Behavior_Returns_Null()
+    public async Task Send_GivenProxyBehaviorReturnsNull_ThrowsRuntimeBinderException()
     {
         var request = new CachedRequest();
         var handlerMock = new Mock<INexRequestHandler<CachedRequest, SampleResponse>>();
@@ -98,66 +88,63 @@ public class NexMediatorTests
             .ReturnsAsync(new SampleResponse());
 
         var proxy = DispatchProxy.Create<INexPipelineBehavior<CachedRequest, SampleResponse>, InvalidBehaviorProxy>();
+        var proxyType = proxy.GetType();
 
         var provider = BuildConfiguredServices(services =>
         {
-            services.AddSingleton<INexRequestHandler<CachedRequest, SampleResponse>>(handlerMock.Object);
+            services.AddSingleton(handlerMock.Object);
             services.AddSingleton(typeof(INexPipelineBehavior<CachedRequest, SampleResponse>), proxy);
+            services.AddSingleton(proxyType, proxy);
         });
-
         var mediator = provider.GetRequiredService<INexMediator>();
 
-        var act = () => mediator.Send<SampleResponse>(request);
-
-        await act.Should().ThrowAsync<NullReferenceException>();
+        Func<Task> act = () => mediator.Send<SampleResponse>(request);
+        await act.Should().ThrowAsync<RuntimeBinderException>();
     }
 
     /// <summary>
-    /// Ensures that Send throws NullReferenceException when a concrete pipeline behavior returns null.
+    /// Send: given concrete behavior returns null, throws RuntimeBinderException.
     /// </summary>
     [Fact]
-    public async Task Send_Should_Throw_NullReference_When_Concrete_Behavior_Returns_Null()
+    public async Task Send_GivenConcreteBehaviorReturnsNull_ThrowsRuntimeBinderException()
     {
         var provider = BuildConfiguredServices(services =>
         {
             services.AddSingleton<INexRequestHandler<BrokenRequest, string>, WorkingBrokenHandler>();
-            services.AddSingleton(typeof(INexPipelineBehavior<BrokenRequest, string>), typeof(BrokenBehavior<BrokenRequest, string>));
+            services.AddSingleton<BrokenBehavior<BrokenRequest, string>>();
+            services.AddSingleton(
+                typeof(INexPipelineBehavior<BrokenRequest, string>),
+                typeof(BrokenBehavior<BrokenRequest, string>)
+            );
         });
-
         var mediator = provider.GetRequiredService<INexMediator>();
         var request = new BrokenRequest();
 
-        var act = () => mediator.Send(request);
-
-        await act.Should().ThrowAsync<NullReferenceException>();
+        Func<Task> act = () => mediator.Send<string>(request);
+        await act.Should().ThrowAsync<RuntimeBinderException>();
     }
 
     /// <summary>
-    /// Validates that Send invokes the correct handler and returns the expected response.
+    /// Send: given valid request, calls handler and returns response.
     /// </summary>
     [Fact]
-    public async Task Send_Should_Invoke_Handler_And_Return_Response()
+    public async Task Send_GivenValidRequest_CallsHandlerAndReturnsResponse()
     {
         var request = new SampleRequest { Data = "test" };
-        var expected = new SampleResponse { Result = "test processed" };
-
         var provider = BuildConfiguredServices(); // SampleRequestHandler is auto-registered
 
         var mediator = provider.GetRequiredService<INexMediator>();
-
         var result = await mediator.Send(request);
 
         result.Should().NotBeNull();
-        result.Result.Should().Be(expected.Result);
+        result.Result.Should().Be("test processed");
     }
 
-
-
     /// <summary>
-    /// Ensures that all notification handlers are invoked when a notification is published.
+    /// Publish: given handlers registered, invokes all handlers once.
     /// </summary>
     [Fact]
-    public async Task Publish_Should_Invoke_All_NotificationHandlers()
+    public async Task Publish_GivenHandlersRegistered_InvokesAllHandlers()
     {
         var notification = new SampleNotification();
         var handler1 = new Mock<INexNotificationHandler<SampleNotification>>();
@@ -168,7 +155,6 @@ public class NexMediatorTests
             services.AddSingleton(handler1.Object);
             services.AddSingleton(handler2.Object);
         });
-
         var mediator = provider.GetRequiredService<INexMediator>();
 
         await mediator.Publish(notification);
@@ -178,10 +164,10 @@ public class NexMediatorTests
     }
 
     /// <summary>
-    /// Ensures that a stream request handler returns all expected results.
+    /// Stream: given handler returns sequence, yields all items.
     /// </summary>
     [Fact]
-    public async Task Stream_Should_Return_All_Items_From_Handler()
+    public async Task Stream_GivenHandlerReturnsSequence_YieldsAllItems()
     {
         var request = new SampleStreamRequest();
         var responses = new List<string> { "a", "b", "c" };
@@ -192,10 +178,8 @@ public class NexMediatorTests
             .Returns(GetAsyncEnumerable(responses));
 
         var provider = BuildConfiguredServices(services =>
-        {
-            services.AddSingleton<INexStreamRequestHandler<SampleStreamRequest, string>>(handlerMock.Object);
-        });
-
+            services.AddSingleton(handlerMock.Object)
+        );
         var mediator = provider.GetRequiredService<INexMediator>();
 
         var result = new List<string>();
@@ -203,113 +187,105 @@ public class NexMediatorTests
         {
             result.Add(item);
         }
-
         result.Should().BeEquivalentTo(responses);
     }
 
     /// <summary>
-    /// Ensures that Publish does not throw when there are no registered handlers.
+    /// Publish: given no handlers, does not throw.
     /// </summary>
     [Fact]
-    public async Task Publish_Should_Not_Throw_When_No_Handlers()
+    public async Task Publish_GivenNoHandlers_DoesNotThrow()
     {
         var notification = new SampleNotification();
-        var provider = BuildConfiguredServices();
-        var mediator = provider.GetRequiredService<INexMediator>();
+        var mediator = BuildConfiguredServices().GetRequiredService<INexMediator>();
 
-        var act = async () => await mediator.Publish(notification);
-
+        Func<Task> act = () => mediator.Publish(notification);
         await act.Should().NotThrowAsync();
     }
 
     /// <summary>
-    /// Ensures that Stream throws an exception when no handler is registered.
+    /// Stream: given no handler registered, throws InvalidOperationException.
     /// </summary>
     [Fact]
-    public async Task Stream_Should_Throw_When_No_Handler_Registered()
+    public async Task Stream_GivenNoHandlerRegistered_ThrowsInvalidOperationException()
     {
+        var mediator = BuildConfiguredServices().GetRequiredService<INexMediator>();
         var request = new SampleStreamRequest();
-        var provider = BuildConfiguredServices();
-        var mediator = provider.GetRequiredService<INexMediator>();
 
-        var act = async () =>
+        Func<Task> act = async () =>
         {
             await foreach (var _ in mediator.Stream(request)) { }
         };
-
         await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("*No service for type*INexStreamRequestHandler*");
+                  .WithMessage("*No service for type*INexStreamRequestHandler*");
     }
 
     /// <summary>
-    /// Ensures that Stream throws NullReferenceException when the handler returns null.
+    /// Stream: given handler returns null, throws NullReferenceException.
     /// </summary>
     [Fact]
-    public async Task Stream_Should_Throw_NullReference_When_Handler_Returns_Null()
+    public async Task Stream_GivenHandlerReturnsNull_ThrowsNullReferenceException()
     {
         var provider = BuildConfiguredServices(services =>
-        {
-            services.AddSingleton<INexStreamRequestHandler<BrokenStreamRequest, string>, FakeInvalidStreamHandler>();
-        });
-
+            services.AddSingleton<INexStreamRequestHandler<BrokenStreamRequest, string>, FakeInvalidStreamHandler>()
+        );
         var mediator = provider.GetRequiredService<INexMediator>();
         var request = new BrokenStreamRequest();
 
-        var act = async () =>
+        Func<Task> act = async () =>
         {
             await foreach (var _ in mediator.Stream(request)) { }
         };
-
         await act.Should().ThrowAsync<NullReferenceException>();
     }
 
     /// <summary>
-    /// Ensures that Send throws ArgumentNullException when the request is null.
+    /// Send: given null request, throws ArgumentNullException.
     /// </summary>
     [Fact]
-    public async Task Send_Should_Throw_When_Request_Is_Null()
+    public async Task Send_GivenNullRequest_ThrowsArgumentNullException()
     {
         var mediator = NexMediatorBuilder.BuildEmptyMediator();
 
         Func<Task> act = () => mediator.Send<string>(null!);
-
-        await act.Should().ThrowAsync<ArgumentNullException>().WithParameterName("request");
+        await act.Should().ThrowAsync<ArgumentNullException>()
+                  .WithParameterName("request");
     }
 
     /// <summary>
-    /// Ensures that Publish throws ArgumentNullException when the notification is null.
+    /// Publish: given null notification, throws ArgumentNullException.
     /// </summary>
     [Fact]
-    public async Task Publish_Should_Throw_When_Notification_Is_Null()
+    public async Task Publish_GivenNullNotification_ThrowsArgumentNullException()
     {
         var mediator = NexMediatorBuilder.BuildEmptyMediator();
 
         Func<Task> act = () => mediator.Publish<SampleNotification>(null!);
-
-        await act.Should().ThrowAsync<ArgumentNullException>().WithParameterName("notification");
+        await act.Should().ThrowAsync<ArgumentNullException>()
+                  .WithParameterName("notification");
     }
 
     /// <summary>
-    /// Ensures that Stream throws ArgumentNullException when the request is null.
+    /// Stream: given null request, throws ArgumentNullException.
     /// </summary>
     [Fact]
-    public async Task Stream_Should_Throw_When_Request_Is_Null()
+    public async Task Stream_GivenNullRequest_ThrowsArgumentNullException()
     {
         var mediator = NexMediatorBuilder.BuildEmptyMediator();
 
-        var act = async () =>
+        Func<Task> act = async () =>
         {
             await foreach (var _ in mediator.Stream<string>(null!)) { }
         };
-
-        await act.Should().ThrowAsync<ArgumentNullException>().WithParameterName("request");
+        await act.Should().ThrowAsync<ArgumentNullException>()
+                  .WithParameterName("request");
     }
 
     /// <summary>
-    /// Ensures that Validate detects duplicate behavior order configuration.
+    /// Validate: given duplicate behavior orders, returns warnings.
     /// </summary>
     [Fact]
-    public void Validate_Should_Return_DuplicateOrderWarnings()
+    public void Validate_GivenDuplicateBehaviorOrders_ReturnsWarnings()
     {
         var services = new ServiceCollection();
         var options = new NexMediatorOptions(services);
@@ -318,7 +294,6 @@ public class NexMediatorTests
         options.AddBehavior(typeof(TransactionBehavior<,>), 1);
 
         var result = options.Validate();
-
         result.Should().Contain(r => r.Contains("Multiple behaviors with order 1"));
     }
 

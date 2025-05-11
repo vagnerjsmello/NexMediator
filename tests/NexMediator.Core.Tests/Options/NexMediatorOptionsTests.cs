@@ -48,17 +48,23 @@ public class NexMediatorOptionsTests
     }
 
     /// <summary>
-    /// Ensures AddBehavior throws if the provided type is not a generic type definition.
+    /// Ensures AddBehavior throws if the provided type is not an open generic definition.
     /// </summary>
     [Fact]
     public void AddBehavior_Should_Throw_If_Type_Is_Not_Generic_Definition()
     {
+        // Arrange
         var nonGenericType = typeof(object);
 
+        // Act
         var ex = Assert.Throws<ArgumentException>(() => _options.AddBehavior(nonGenericType, 1));
 
-        Assert.Contains("must be a generic type definition", ex.Message);
+        // Assert
+        // O código agora lança "Type must be open generic."
+        Assert.Contains("Type must be open generic", ex.Message);
+        Assert.Equal("behaviorType", ex.ParamName);
     }
+
 
     /// <summary>
     /// Ensures AddBehavior throws if the provided type does not implement INexPipelineBehavior.
