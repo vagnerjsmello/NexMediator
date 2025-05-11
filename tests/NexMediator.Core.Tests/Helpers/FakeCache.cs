@@ -14,7 +14,7 @@ public class FakeCache : ICache
         => Task.FromResult<T?>(default);
 
     public Task SetAsync<T>(string key, T value, int? ttl = null, CancellationToken cancellationToken = default)
-    {        
+    {
         return Task.CompletedTask;
     }
 
