@@ -1,3 +1,4 @@
+
 # NexMediator
 
 🔷 **NexMediator** is a modern, extensible, and high-performance .NET library implementing the **Mediator** design pattern. It provides a robust alternative to MediatR for CQRS-based architectures — with powerful support for **request/response**, **notifications**, and **streaming**, all underpinned by a fully **pluggable pipeline**.
@@ -40,7 +41,10 @@ Install via package manager:
 - [📦 Example Usage](#-example-usage)
 - [📚 Docs](#-docs)
 - [🤝 Contributing](#-contributing)
+- [📖 Full docs and examples](#-Full-docs-and-examples)
 - [📄 License](#-license)
+- [🏷 Tags](#-tags)
+
 
 
 ## ✨ About NexMediator
@@ -291,6 +295,11 @@ We welcome contributions!
 - `main` – stable releases  
 - `develop` – integrates all new features  
 - `feature/*` – work in progress branches
+
+
+## 📖 Full docs and examples:  
+https://github.com/vagnerjsmello/NexMediator/#README.md
+
 
 ## 📄 License
 
