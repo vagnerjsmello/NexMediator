@@ -1,6 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using NexMediator.Abstractions.Interfaces;
 using NexMediator.Core;
+using NexMediator.Pipeline.Behaviors;
 
 
 namespace NexMediator.Extensions;
@@ -20,6 +23,13 @@ public static class ServiceCollectionExtensions
         // Create configuration options with access to the service collection
         var options = new NexMediatorOptions(services);
         configure?.Invoke(options);
+
+        //Minimal logging infra for behaviors only
+        if (options.HasBehavior(typeof(LoggingBehavior<,>)))
+        {
+            services.TryAddSingleton<ILoggerFactory, LoggerFactory>();
+            services.TryAddTransient(typeof(ILogger<>), typeof(Logger<>));
+        }
 
         // Register mediator core components
         services.AddSingleton(options);

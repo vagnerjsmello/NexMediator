@@ -2,119 +2,97 @@
 using NexMediator.Abstractions.Exceptions;
 using NexMediator.Abstractions.Interfaces;
 using System.Collections.Concurrent;
-using System.Linq.Expressions;
 
 namespace NexMediator.Core.Internal;
 
 /// <summary>
-/// NexRequestExecutor builds and caches delegates to avoid reflection at runtime.
+/// Builds and caches a pipeline invoker per request and response type.
+/// The pipeline:
+/// 1. Creates a service scope.
+/// 2. Resolves handler and behaviors.
+/// 3. Chains behaviors around the handler.
+/// 4. Executes the pipeline and returns the response as object.
 /// </summary>
 internal static class NexRequestExecutor
 {
-    // Cache delegates for each request-response type pair
-    private static readonly ConcurrentDictionary<(Type requestType, Type responseType), Func<object, IServiceProvider, CancellationToken, Task<object>>> _cache = new();
+    private static readonly ConcurrentDictionary<(Type Request, Type Response), Func<object, CancellationToken, Task<object>>> _pipelineCache = new();
 
     /// <summary>
-    /// Dispatch the request using a compiled delegate from the cache.
+    /// Dispatches a request through a cached pipeline and returns the typed response.
     /// </summary>
-    public static async Task<TResponse> Dispatch<TResponse>(
-        INexRequest<TResponse> request,
-        IServiceProvider provider,
-        CancellationToken cancellationToken)
+    /// <typeparam name="TResponse">The expected response type.</typeparam>
+    /// <param name="request">The request to send.</param>
+    /// <param name="provider">The root service provider.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The response from the handler.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if request is null.</exception>
+    public static async Task<TResponse> Dispatch<TResponse>(INexRequest<TResponse> request, IServiceProvider provider, CancellationToken cancellationToken)
     {
-        var requestType = request.GetType();
-        var key = (requestType, typeof(TResponse));
+        if (request == null)
+            throw new ArgumentNullException(nameof(request));
 
-        // Get or build a delegate to handle the request
-        var executor = _cache.GetOrAdd(key, static tuple =>
-        {
-            var (reqType, resType) = tuple;
+        var reqType = request.GetType();
+        var resType = typeof(TResponse);
+        var key = (Request: reqType, Response: resType);
 
-            // Get method: Execute<TRequest, TResponse>
-            var executeMethod = typeof(NexRequestExecutor)
-                .GetMethod(nameof(Execute))!
-                .MakeGenericMethod(reqType, resType);
+        var invoker = _pipelineCache.GetOrAdd(key, _ => BuildFullPipelineInvoker(reqType, resType, provider));
 
-            // Create parameters: (object request, IServiceProvider provider, CancellationToken ct)
-            var requestParam = Expression.Parameter(typeof(object), "request");
-            var providerParam = Expression.Parameter(typeof(IServiceProvider), "provider");
-            var tokenParam = Expression.Parameter(typeof(CancellationToken), "ct");
-
-            // Cast the request to its real type
-            var castedRequest = Expression.Convert(requestParam, reqType);
-
-            // Call Execute<TRequest, TResponse>(typedRequest, provider, ct)
-            var callExecute = Expression.Call(executeMethod, castedRequest, providerParam, tokenParam);
-
-            // Get method WrapTask<T>(Task<T>) -> Task<object>
-            var wrapMethod = typeof(NexRequestExecutor)
-                .GetMethods()
-                .First(m =>
-                    m.Name == nameof(WrapTask)
-                    && m.IsGenericMethodDefinition
-                    && m.GetGenericArguments().Length == 1
-                    && m.GetParameters()[0].ParameterType.IsGenericType
-                    && m.GetParameters()[0].ParameterType.GetGenericTypeDefinition() == typeof(Task<>)
-                )
-                .MakeGenericMethod(resType);
-
-            // Wrap the result of Execute in a Task<object>
-            var wrappedCall = Expression.Call(wrapMethod, callExecute);
-
-            // Final delegate: (object, IServiceProvider, CancellationToken) => WrapTask(Execute(...))
-            var lambda = Expression.Lambda<Func<object, IServiceProvider, CancellationToken,
-                Task<object>>>(wrappedCall, requestParam, providerParam, tokenParam);
-
-            return lambda.Compile();
-        });
-
-        // Run the compiled delegate
-        var result = await executor(request, provider, cancellationToken);
-        return (TResponse)result!;
+        var resultObj = await invoker(request, cancellationToken).ConfigureAwait(false);
+        return (TResponse)resultObj!;
     }
 
     /// <summary>
-    /// Converts a Task T into Task object to unify return types.
+    /// Builds a delegate that runs the full pipeline for a given request and response types.
     /// </summary>
-    public static async Task<object> WrapTask<T>(Task<T> task)
+    /// <param name="reqType">The runtime type of the request.</param>
+    /// <param name="resType">The runtime type of the response.</param>
+    /// <param name="rootProvider">The root service provider for scopes.</param>
+    /// <returns>A function that processes a request and returns the result boxed as object.</returns>
+    private static Func<object, CancellationToken, Task<object>> BuildFullPipelineInvoker(Type reqType, Type resType, IServiceProvider rootProvider)
     {
-        var result = await task.ConfigureAwait(false);
-        return result ?? throw new NexMediatorException("Handler method returned null.");
-    }
+        var scopeFactory = rootProvider.GetRequiredService<IServiceScopeFactory>();
 
-    /// <summary>
-    /// Executes the request handler and applies pipeline behaviors.
-    /// Ensures all handler resolution occurs within a scoped service provider
-    /// to support dependencies that have scoped lifetimes (like repositories).
-    /// </summary>
-    public static Task<TResponse> Execute<TRequest, TResponse>(
-        TRequest request,
-        IServiceProvider provider,
-        CancellationToken cancellationToken)
-        where TRequest : INexRequest<TResponse>
-    {
-        // Create a new scope to resolve scoped dependencies like repositories
-        using var scope = provider.CreateScope();
-        var scopedProvider = scope.ServiceProvider;
+        var handlerInterface = typeof(INexRequestHandler<,>).MakeGenericType(reqType, resType);
+        Func<IServiceProvider, object> handlerFactory = sp => sp.GetRequiredService(handlerInterface)!;
 
-        // Resolve the request handler within scope
-        var handler = scopedProvider.GetRequiredService<INexRequestHandler<TRequest, TResponse>>();
+        var behaviorInterface = typeof(INexPipelineBehavior<,>).MakeGenericType(reqType, resType);
 
-        // Resolve all pipeline behaviors (optional, ordered) within the same scope
-        var behaviors = scopedProvider
-            .GetServices<INexPipelineBehavior<TRequest, TResponse>>()
-            .Where(b => b != null)
-            .ToList();
 
-        // Create the final delegate by chaining all behaviors and the base handler
-        RequestHandlerDelegate<TResponse> handlerDelegate = () => handler.Handle(request, cancellationToken);
+        var behaviorFactories = rootProvider
+            .GetServices(behaviorInterface)
+            .Select(b => b!.GetType())
+            .Select(type => (Func<IServiceProvider, object>)(sp => sp.GetRequiredService(type)!))
+            .ToArray();
 
-        foreach (var behavior in Enumerable.Reverse(behaviors))
+        return async (object reqObj, CancellationToken ct) =>
         {
-            var next = handlerDelegate;
-            handlerDelegate = () => behavior.Handle(request, next, cancellationToken);
-        }
+            using var scope = scopeFactory.CreateScope();
+            var sp = scope.ServiceProvider;
 
-        return handlerDelegate();
+            dynamic handler = handlerFactory(sp);
+            Func<Task<object>> pipeline = async () =>
+            {
+                var response = await handler.Handle((dynamic)reqObj, ct).ConfigureAwait(false);
+                return (object)response!;
+            };
+
+            for (int i = behaviorFactories.Length - 1; i >= 0; i--)
+            {
+                dynamic behavior = behaviorFactories[i](sp);
+                var next = pipeline;
+                pipeline = async () =>
+                {
+                    var response = await behavior.Handle((dynamic)reqObj, next, ct).ConfigureAwait(false);
+                    return (object)response!;
+                };
+            }
+
+            var finalResult = await pipeline().ConfigureAwait(false);
+
+            if (finalResult == null)
+                throw new NexMediatorException("Handler returned null response.");
+
+            return finalResult;
+        };
     }
 }
