@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NexMediator.Abstractions.Interfaces;
@@ -42,10 +41,26 @@ public class NexMediatorTests
     }
 
     /// <summary>
-    /// Send: given proxy handler returns null Task, throws RuntimeBinderException.
+    /// Send: given valid request, calls handler and returns response.
     /// </summary>
     [Fact]
-    public async Task Send_GivenProxyHandlerReturnsNullTask_ThrowsRuntimeBinderException()
+    public async Task Send_GivenValidRequest_CallsHandlerAndReturnsResponse()
+    {
+        var request = new SampleRequest { Data = "test" };
+        var provider = BuildConfiguredServices(); // SampleRequestHandler is auto-registered
+
+        var mediator = provider.GetRequiredService<INexMediator>();
+        var result = await mediator.Send(request);
+
+        result.Should().NotBeNull();
+        result.Result.Should().Be("test processed");
+    }
+
+    /// <summary>
+    /// Send: when a proxy handler returns null Task, throws NullReferenceException.
+    /// </summary>
+    [Fact]
+    public async Task Send_GivenProxyHandlerReturnsNullTask_ThrowsNullReferenceException()
     {
         var request = new CachedRequest();
         var proxy = DispatchProxy.Create<INexRequestHandler<CachedRequest, SampleResponse>, InvalidHandlerProxy>();
@@ -56,14 +71,14 @@ public class NexMediatorTests
         var mediator = provider.GetRequiredService<INexMediator>();
 
         Func<Task> act = () => mediator.Send<SampleResponse>(request);
-        await act.Should().ThrowAsync<RuntimeBinderException>();
+        await act.Should().ThrowAsync<NullReferenceException>();
     }
 
     /// <summary>
-    /// Send: given reflection handler returns null, throws RuntimeBinderException.
+    /// Send: when a reflection-based handler returns null Task, throws NullReferenceException.
     /// </summary>
     [Fact]
-    public async Task Send_GivenReflectionHandlerReturnsNull_ThrowsRuntimeBinderException()
+    public async Task Send_GivenReflectionHandlerReturnsNullTask_ThrowsNullReferenceException()
     {
         var request = new CachedRequest();
         var provider = BuildConfiguredServices(services =>
@@ -72,14 +87,14 @@ public class NexMediatorTests
         var mediator = provider.GetRequiredService<INexMediator>();
 
         Func<Task> act = () => mediator.Send<SampleResponse>(request);
-        await act.Should().ThrowAsync<RuntimeBinderException>();
+        await act.Should().ThrowAsync<NullReferenceException>();
     }
 
     /// <summary>
-    /// Send: given proxy behavior returns null, throws RuntimeBinderException.
+    /// Send: when a proxy behavior returns null Task, throws NullReferenceException.
     /// </summary>
     [Fact]
-    public async Task Send_GivenProxyBehaviorReturnsNull_ThrowsRuntimeBinderException()
+    public async Task Send_GivenProxyBehaviorReturnsNullTask_ThrowsNullReferenceException()
     {
         var request = new CachedRequest();
         var handlerMock = new Mock<INexRequestHandler<CachedRequest, SampleResponse>>();
@@ -99,15 +114,16 @@ public class NexMediatorTests
         var mediator = provider.GetRequiredService<INexMediator>();
 
         Func<Task> act = () => mediator.Send<SampleResponse>(request);
-        await act.Should().ThrowAsync<RuntimeBinderException>();
+        await act.Should().ThrowAsync<NullReferenceException>();
     }
 
     /// <summary>
-    /// Send: given concrete behavior returns null, throws RuntimeBinderException.
+    /// Send: when a concrete behavior returns null Task, throws NullReferenceException.
     /// </summary>
     [Fact]
-    public async Task Send_GivenConcreteBehaviorReturnsNull_ThrowsRuntimeBinderException()
+    public async Task Send_GivenConcreteBehaviorReturnsNullTask_ThrowsNullReferenceException()
     {
+        // Arrange
         var provider = BuildConfiguredServices(services =>
         {
             services.AddSingleton<INexRequestHandler<BrokenRequest, string>, WorkingBrokenHandler>();
@@ -120,25 +136,72 @@ public class NexMediatorTests
         var mediator = provider.GetRequiredService<INexMediator>();
         var request = new BrokenRequest();
 
+        // Act
         Func<Task> act = () => mediator.Send<string>(request);
-        await act.Should().ThrowAsync<RuntimeBinderException>();
+
+        // Assert
+        await act.Should().ThrowAsync<NullReferenceException>();
     }
 
     /// <summary>
-    /// Send: given valid request, calls handler and returns response.
+    /// Send: when a concrete behavior returns null Task via dynamic proxy, throws NullReferenceException.
     /// </summary>
     [Fact]
-    public async Task Send_GivenValidRequest_CallsHandlerAndReturnsResponse()
+    public async Task Send_GivenConcreteBehaviorProxyReturnsNullTask_ThrowsNullReferenceException()
     {
-        var request = new SampleRequest { Data = "test" };
-        var provider = BuildConfiguredServices(); // SampleRequestHandler is auto-registered
+        // Arrange
+        var request = new CachedRequest();
+        var handlerMock = new Mock<INexRequestHandler<CachedRequest, SampleResponse>>();
+        handlerMock
+            .Setup(h => h.Handle(It.IsAny<CachedRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new SampleResponse());
 
+        var proxy = DispatchProxy.Create<INexPipelineBehavior<CachedRequest, SampleResponse>, InvalidBehaviorProxy>();
+        var proxyType = proxy.GetType();
+
+        var provider = BuildConfiguredServices(services =>
+        {
+            services.AddSingleton(handlerMock.Object);
+            services.AddSingleton(typeof(INexPipelineBehavior<CachedRequest, SampleResponse>), proxy);
+            services.AddSingleton(proxyType, proxy);
+        });
         var mediator = provider.GetRequiredService<INexMediator>();
-        var result = await mediator.Send(request);
 
-        result.Should().NotBeNull();
-        result.Result.Should().Be("test processed");
+        // Act
+        Func<Task> act = () => mediator.Send<SampleResponse>(request);
+
+        // Assert
+        await act.Should().ThrowAsync<NullReferenceException>();
     }
+
+    /// <summary>
+    /// Send: when a proxy behavior returns null response, throws NullReferenceException.
+    /// </summary>
+    [Fact]
+    public async Task Send_GivenProxyBehaviorReturnsNull_ThrowsNullReferenceException()
+    {
+        var request = new CachedRequest();
+        var handlerMock = new Mock<INexRequestHandler<CachedRequest, SampleResponse>>();
+        handlerMock
+            .Setup(h => h.Handle(It.IsAny<CachedRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new SampleResponse());
+
+        var proxy = DispatchProxy.Create<INexPipelineBehavior<CachedRequest, SampleResponse>, InvalidBehaviorProxy>();
+        var proxyType = proxy.GetType();
+
+        var provider = BuildConfiguredServices(services =>
+        {
+            services.AddSingleton(handlerMock.Object);
+            services.AddSingleton(typeof(INexPipelineBehavior<CachedRequest, SampleResponse>), proxy);
+            services.AddSingleton(proxyType, proxy);
+        });
+        var mediator = provider.GetRequiredService<INexMediator>();
+
+        Func<Task> act = () => mediator.Send<SampleResponse>(request);
+        await act.Should().ThrowAsync<NullReferenceException>();
+    }
+
+
 
     /// <summary>
     /// Publish: given handlers registered, invokes all handlers once.
