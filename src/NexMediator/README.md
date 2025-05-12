@@ -1,3 +1,4 @@
+
 # NexMediator
 
 🔷 **NexMediator** is a modern, extensible, and high-performance .NET library implementing the **Mediator** design pattern. It provides a robust alternative to MediatR for CQRS-based architectures — with powerful support for **request/response**, **notifications**, and **streaming**, all underpinned by a fully **pluggable pipeline**.
@@ -15,7 +16,7 @@
 
 ![NuGet NexMediator](https://img.shields.io/nuget/v/NexMediator?style=flat-square)
 
-NuGet: [NexMediator](https://www.nuget.org/packages/NexMediator/)  
+NuGet: [NexMediator](https://www.nuget.org/packages/NexMediator)  
 
 Install via cli:  
 > ```bash
@@ -24,7 +25,7 @@ Install via cli:
 
 Install via package manager:
 > ```bash
-> NuGet\Install-Package NexMediator 
+> NuGet\Install-Package NexMediator
 > ```
 
 ---
@@ -40,7 +41,10 @@ Install via package manager:
 - [📦 Example Usage](#-example-usage)
 - [📚 Docs](#-docs)
 - [🤝 Contributing](#-contributing)
+- [📖 Full docs and examples](#-Full-docs-and-examples)
 - [📄 License](#-license)
+- [🏷 Tags](#-tags)
+
 
 
 ## ✨ About NexMediator
@@ -146,6 +150,9 @@ services.AddNexMediator(options =>
 ## 📦 Example Usage
 
 ### Command
+
+Use `INexCommand<TResponse>` to define operations that **change application state**, such as creating, updating, or deleting data.
+
 ```csharp
 public class CreateOrder : INexCommand<OrderResult> { ... }
 
@@ -158,7 +165,29 @@ public class CreateOrderHandler : INexRequestHandler<CreateOrder, OrderResult>
 }
 ```
 
+### Query
+
+Use `INexQuery<TResponse>` for read-only operations that do not mutate state, commonly used for data retrieval.
+
+```csharp
+public class GetUserProfileQuery : INexQuery<UserProfile>
+{
+    public int UserId { get; init; }
+}
+
+public class GetUserProfileHandler : INexRequestHandler<GetUserProfileQuery, UserProfile>
+{
+    public async Task<UserProfile> Handle(GetUserProfileQuery query, CancellationToken ct)
+    {
+        // Fetch and return user profile without side effects
+    }
+}
+```
+
 ### Notification
+
+Use `INexNotification` for event-style messages that are broadcasted to one or many handlers without expecting a response.
+
 ```csharp
 public class OrderCreated : INexNotification { ... }
 
@@ -168,6 +197,9 @@ public class EmailNotifier : INexNotificationHandler<OrderCreated> { ... }
 ```
 
 ### Stream Request
+
+Use `INexStreamRequest<T>` when you need to yield multiple results asynchronously, like paged or real-time data.
+
 ```csharp
 public class FetchEvents : INexStreamRequest<EventData> { ... }
 
@@ -180,12 +212,12 @@ public class FetchEventsHandler : INexStreamRequestHandler<FetchEvents, EventDat
 }
 ```
 
-## 🔒 Transactional Request
+### Transactional Request
 
 Requests that implement `ITransactionalRequest<TResponse>` will be executed within a transactional scope (e.g., database transaction). If the handler fails, changes are rolled back automatically.
 
 ```csharp
-public class UpdateUserCommand : ITransactionalRequest<UserResult>
+public class UpdateUserCommand : INexCommand<UserResult>, ITransactionalRequest<UserResult>
 {
     public int Id { get; init; }
     public string NewEmail { get; init; }
@@ -200,12 +232,12 @@ public class UpdateUserHandler : INexRequestHandler<UpdateUserCommand, UserResul
 }
 ```
 
-## 📦 Cacheable Request
+### Cacheable Request 
 
 Implement `ICacheableRequest<TResponse>` to enable response-level caching with automatic keying and expiration control.
 
 ```csharp
-public class GetUserProfileQuery : ICacheableRequest<UserProfile>
+public class GetUserProfileQuery : INexQuery<UserProfile>, ICacheableRequest<UserProfile>
 {
     public int UserId { get; init; }
 
@@ -214,12 +246,12 @@ public class GetUserProfileQuery : ICacheableRequest<UserProfile>
 }
 ```
 
-## 🧹 Invalidate Cache
+### 🧹 Invalidate Cache
 
 Use `IInvalidateCacheableRequest` to remove cache entries when executing a state-changing command. Useful for cache coherence after updates.
 
 ```csharp
-public class UpdateUserCommand : ITransactionalRequest<UserResult>, IInvalidateCacheableRequest
+public class UpdateUserCommand : INexCommand<UserResult>, ITransactionalRequest<UserResult>, IInvalidateCacheableRequest
 {
     public int Id { get; init; }
     public string NewEmail { get; init; }
@@ -263,6 +295,11 @@ We welcome contributions!
 - `main` – stable releases  
 - `develop` – integrates all new features  
 - `feature/*` – work in progress branches
+
+
+## 📖 Full docs and examples:  
+https://github.com/vagnerjsmello/NexMediator/#README.md
+
 
 ## 📄 License
 
