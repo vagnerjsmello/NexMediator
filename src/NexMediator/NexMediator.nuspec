@@ -3,7 +3,7 @@
 	<metadata>
 		<!-- Identify -->
 		<id>NexMediator</id>
-		<version>1.0.7</version>
+		<version>1.0.8</version>
 		<authors>Vagner Mello</authors>
 		<owners>Vagner Mello</owners>
 		<icon>icon.png</icon>
@@ -21,7 +21,7 @@
 			Ideal for microservices, DDD, and testable, modular applications.
 		</description>
 		<readme>README.md</readme>
-		<releaseNotes>Initial 1.0.5 release with embedded DLLs of all sub-projects.</releaseNotes>
+		<releaseNotes>Initial 1.0.8 release with embedded DLLs of all sub-projects.</releaseNotes>
 
 		<!-- Tags -->
 		<tags>CQRS Mediator DotNet NexMediator</tags>

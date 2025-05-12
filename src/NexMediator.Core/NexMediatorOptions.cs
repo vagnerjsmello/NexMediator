@@ -23,7 +23,7 @@ public class NexMediatorOptions
     /// Initializes a new instance of <see cref="NexMediatorOptions"/>.
     /// </summary>
     /// <param name="services">
-    /// The service collection for registering behaviors and context.
+    /// Service collection to register behaviors and context.
     /// </param>
     public NexMediatorOptions(IServiceCollection services)
     {
@@ -32,67 +32,78 @@ public class NexMediatorOptions
 
     /// <summary>
     /// Adds a pipeline behavior with a specific execution order.
+    /// Registers both interface and concrete type for DI.
     /// </summary>
-    /// <param name="behaviorType">The open-generic type of the behavior.</param>
-    /// <param name="order">The order in which the behavior runs (lower runs first).</param>
-    /// <returns>The same <see cref="NexMediatorOptions"/> for chaining.</returns>
+    /// <param name="behaviorType">Open-generic behavior type.</param>
+    /// <param name="order">Execution order (lower runs first).</param>
+    /// <returns>Same <see cref="NexMediatorOptions"/> for chaining.</returns>
     public NexMediatorOptions AddBehavior(Type behaviorType, int order)
     {
         if (behaviorType == null)
             throw new ArgumentNullException(nameof(behaviorType));
-
         if (!behaviorType.IsGenericTypeDefinition)
             throw new ArgumentException("Type must be open generic.", nameof(behaviorType));
-
         if (!ImplementsPipelineBehavior(behaviorType))
             throw new ArgumentException("Type must implement INexPipelineBehavior<,>.", nameof(behaviorType));
 
+        // Track execution order
         _behaviorMap[behaviorType] = new BehaviorRegistration(behaviorType, order);
+
+        // Register open-generic interface and concrete type
         _services.AddTransient(typeof(INexPipelineBehavior<,>), behaviorType);
+        _services.AddTransient(behaviorType);
 
         return this;
     }
 
     /// <summary>
-    /// Adds a pipeline behavior and optionally registers correlation context.
+    /// Adds a pipeline behavior, optionally enabling correlation support.
+    /// Registers with scoped lifetime if logging, otherwise transient.
     /// </summary>
-    /// <param name="behaviorType">The open-generic behavior type.</param>
-    /// <param name="order">The run order for the behavior.</param>
+    /// <param name="behaviorType">Open-generic behavior type.</param>
+    /// <param name="order">Execution order.</param>
     /// <param name="enableCorrelation">
-    /// If true and behavior is <see cref="LoggingBehavior{,}"/>, adds <see cref="ICorrelationContext"/>.
+    /// If true and logging behavior, registers correlation context and scoped behavior.
     /// </param>
-    /// <returns>The same <see cref="NexMediatorOptions"/> for chaining.</returns>
+    /// <returns>Same <see cref="NexMediatorOptions"/> for chaining.</returns>
     public NexMediatorOptions AddBehavior(Type behaviorType, int order, bool enableCorrelation)
     {
         if (behaviorType == null)
             throw new ArgumentNullException(nameof(behaviorType));
 
         if (enableCorrelation && behaviorType == LoggingBehaviorType)
+        {
             _services.TryAddScoped<ICorrelationContext, CorrelationContext>();
+            _services.AddScoped(behaviorType);
+        }
+        else
+        {
+            _services.AddTransient(behaviorType);
+        }
 
+        // Track execution order
         _behaviorMap[behaviorType] = new BehaviorRegistration(behaviorType, order);
+        // Register open-generic interface
         _services.AddTransient(typeof(INexPipelineBehavior<,>), behaviorType);
 
         return this;
     }
 
     /// <summary>
-    /// Adds a pipeline behavior of type <typeparamref name="TBehavior"/>.
+    /// Adds a pipeline behavior of the specified generic type.
     /// </summary>
-    /// <typeparam name="TBehavior">The open-generic behavior type.</typeparam>
-    /// <param name="order">Execution order for this behavior.</param>
-    /// <returns>The same <see cref="NexMediatorOptions"/> for chaining.</returns>
+    /// <typeparam name="TBehavior">Open-generic behavior type.</typeparam>
+    /// <param name="order">Execution order.</param>
+    /// <returns>Same <see cref="NexMediatorOptions"/> for chaining.</returns>
     public NexMediatorOptions AddBehavior<TBehavior>(int order)
         where TBehavior : class
-    {
-        return AddBehavior(typeof(TBehavior), order);
-    }
+        => AddBehavior(typeof(TBehavior), order);
 
     /// <summary>
-    /// Removes a previously added behavior.
+    /// Removes a previously added behavior and its DI registrations.
     /// </summary>
-    /// <param name="behaviorType">The open-generic behavior type to remove.</param>
-    /// <returns>The same <see cref="NexMediatorOptions"/> for chaining.</returns>
+    /// <param name="behaviorType">Open-generic behavior type to remove.</param>
+    /// <returns>Same <see cref="NexMediatorOptions"/> for chaining.</returns>
     public NexMediatorOptions RemoveBehavior(Type behaviorType)
     {
         if (behaviorType == null)
@@ -100,90 +111,86 @@ public class NexMediatorOptions
 
         if (_behaviorMap.Remove(behaviorType))
         {
-            var descriptor = _services.FirstOrDefault(d =>
-                d.ServiceType == typeof(INexPipelineBehavior<,>) &&
-                d.ImplementationType == behaviorType);
-            if (descriptor != null)
+            // Remove all service descriptors for this behavior
+            var descriptors = _services
+                .Where(d => d.ImplementationType == behaviorType)
+                .ToList();
+
+            foreach (var descriptor in descriptors)
+            {
                 _services.Remove(descriptor);
+            }
         }
 
         return this;
     }
 
     /// <summary>
-    /// Validates the current behavior configuration.
+    /// Validates the current behavior configuration and returns warnings.
     /// </summary>
-    /// <returns>A read-only list of warnings if configuration issues exist.</returns>
+    /// <returns>List of warning messages.</returns>
     public IReadOnlyList<string> Validate()
     {
         var messages = new List<string>();
 
-        var duplicateOrders = _behaviorMap.Values
+        // Check for duplicate execution orders
+        var duplicateGroups = _behaviorMap.Values
             .GroupBy(b => b.Order)
             .Where(g => g.Count() > 1);
-
-        foreach (var group in duplicateOrders)
+        foreach (var group in duplicateGroups)
         {
-            var types = string.Join(", ", group.Select(b => b.BehaviorType.Name));
-            messages.Add($"Multiple behaviors with order {group.Key}: {types}");
+            var names = string.Join(", ", group.Select(b => b.BehaviorType.Name));
+            messages.Add($"Multiple behaviors with order {group.Key}: {names}");
         }
 
-        if (HasBehaviorOutOfOrder(LoggingBehaviorType, 1) ||
-            HasBehaviorOutOfOrder(FluentValidationBehaviorType, 2) ||
-            HasBehaviorOutOfOrder(CachingBehaviorType, 3) ||
-            HasBehaviorOutOfOrder(TransactionBehaviorType, 4))
+        // Warn if built-in behaviors are out of recommended order
+        if (HasBehaviorOutOfOrder(LoggingBehaviorType, 1)
+            || HasBehaviorOutOfOrder(FluentValidationBehaviorType, 2)
+            || HasBehaviorOutOfOrder(CachingBehaviorType, 3)
+            || HasBehaviorOutOfOrder(TransactionBehaviorType, 4))
         {
-            messages.Add("Built-in behaviors are not in recommended order: Logging (1), FluentValidation (2), Caching (3), Transaction (4)");
+            messages.Add(
+                "Built-in behaviors are not in recommended order: " +
+                "Logging (1), FluentValidation (2), Caching (3), Transaction (4)");
         }
 
         return messages;
     }
 
     /// <summary>
-    /// Orders a list of behavior instances according to configured order.
+    /// Orders a list of behavior instances by their configured execution order.
     /// </summary>
     /// <param name="behaviors">Unordered behavior instances.</param>
-    /// <returns>An ordered sequence of behaviors.</returns>
+    /// <returns>Ordered behaviors.</returns>
     public IEnumerable<object> OrderBehaviors(IEnumerable<object> behaviors)
-    {
-        return behaviors.OrderBy(b =>
+        => behaviors.OrderBy(b =>
         {
             var type = b.GetType().IsGenericType
                 ? b.GetType().GetGenericTypeDefinition()
                 : b.GetType();
-
             return _behaviorMap.TryGetValue(type, out var reg)
                 ? reg.Order
                 : int.MaxValue;
         });
-    }
 
     /// <summary>
-    /// Checks if a behavior of the given open-generic type is registered.
+    /// Checks if an open-generic behavior type is registered.
     /// </summary>
-    /// <param name="behaviorType">The behavior type to check.</param>
-    /// <returns>True if registered; otherwise false.</returns>
     public bool HasBehavior(Type behaviorType)
     {
         if (behaviorType == null)
             throw new ArgumentNullException(nameof(behaviorType));
-
         return _behaviorMap.ContainsKey(behaviorType);
     }
 
-    /// <summary>
-    /// Checks if <typeparamref name="TBehavior"/> is registered.
-    /// </summary>
-    /// <typeparam name="TBehavior">The behavior type to check.</typeparam>
-    /// <returns>True if registered; otherwise false.</returns>
-    public bool HasBehavior<TBehavior>() where TBehavior : class
-        => HasBehavior(typeof(TBehavior));
-
     private bool ImplementsPipelineBehavior(Type type)
-        => type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INexPipelineBehavior<,>));
+        => type.GetInterfaces()
+               .Any(i => i.IsGenericType &&
+                         i.GetGenericTypeDefinition() == typeof(INexPipelineBehavior<,>));
 
     private bool HasBehaviorOutOfOrder(Type behaviorType, int expectedOrder)
-        => _behaviorMap.TryGetValue(behaviorType, out var reg) && reg.Order != expectedOrder;
+        => _behaviorMap.TryGetValue(behaviorType, out var reg)
+           && reg.Order != expectedOrder;
 
     private record BehaviorRegistration(Type BehaviorType, int Order);
 }
