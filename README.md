@@ -1,5 +1,3 @@
-# NexMediator
-
 <p align="center">
   <img src="https://raw.githubusercontent.com/wiki/vagnerjsmello/NexMediator/assets/logo-nexmediator.png" alt="NexMediator logo" width="150" />
 </p>
@@ -114,7 +112,7 @@ Star ⭐ the repo, suggest improvements, or submit PRs via `feature/*` branches.
 📦 Follow our branch strategy: `main`, `develop`, `feature/*`
 
 
-See [Contributing Guide →](https://github.com/vagnerjsmello/NexMediator/wiki/08-Contributi
+See [Contributing Guide](https://github.com/vagnerjsmello/NexMediator/wiki/08-Contributing)
 
 ---
 
