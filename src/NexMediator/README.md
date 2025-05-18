@@ -20,7 +20,7 @@
 
 ## 📘 Overview
 
-**NexMediator** is a clean, modular, and pluggable mediator engine for .NET 6+ applications — a robust alternative to MediatR with:
+**NexMediator** is a clean, modular, and pluggable mediator engine for .NET 8+ applications — a robust alternative to MediatR with:
 
 - ✅ Built-in pipeline behaviors (logging, validation, caching, transactions)
 - 📣 Parallel notifications
@@ -111,7 +111,7 @@ Star ⭐ the repo, suggest improvements, or submit PRs via `feature/*` branches.
 ✅ Use [Conventional Commits](https://www.conventionalcommits.org)  
 📦 Follow our branch strategy: `main`, `develop`, `feature/*`
 
-See [Contributing Guide →](https://github.com/vagnerjsmello/NexMediator/wiki/Contributing)
+See [Contributing Guide →](https://github.com/vagnerjsmello/NexMediator/wiki/08-Contributing)
 
 ---
 
