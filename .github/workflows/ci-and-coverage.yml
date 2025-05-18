@@ -69,6 +69,26 @@ jobs:
           "-reporttypes:Html;TextSummary;JsonSummary"
           "-assemblyfilters:+NexMediator.Abstractions;+NexMediator.Core;+NexMediator.Extensions;+NexMediator.Pipeline;-*.Tests;-NexMediator"
 
+      - name: Generate badge-compatible summary JSON
+        run: |
+          coverage_value=$(jq '.summary.linecoverage' coveragereport/Summary.json)
+          coverage_percent=$(printf "%.1f%%" "$coverage_value")
+
+          if (( $(echo "$coverage_value >= 85" | bc -l) )); then
+            color="green"
+          elif (( $(echo "$coverage_value >= 70" | bc -l) )); then
+            color="yellow"
+          else
+            color="red"
+          fi
+
+          jq -n \
+            --arg label "coverage" \
+            --arg message "$coverage_percent" \
+            --arg color "$color" \
+            '{schemaVersion:1, label:$label, message:$message, color:$color}' \
+            > coveragereport/badge-summary.json
+
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
         with:
