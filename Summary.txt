@@ -1,0 +1,41 @@
+Summary
+  Generated on: 05/18/2025 - 23:56:36
+  Coverage date: 05/18/2025 - 23:56:26 - 05/18/2025 - 23:56:34
+  Parser: MultiReport (4x Cobertura)
+  Assemblies: 4
+  Classes: 13
+  Files: 13
+  Line coverage: 89.8%
+  Covered lines: 494
+  Uncovered lines: 56
+  Coverable lines: 550
+  Total lines: 1204
+  Branch coverage: 77.6% (101 of 130)
+  Covered branches: 101
+  Total branches: 130
+  Method coverage: 95.5% (43 of 45)
+  Full method coverage: 73.3% (33 of 45)
+  Covered methods: 43
+  Fully covered methods: 33
+  Total methods: 45
+
+NexMediator.Abstractions                                             100%
+  NexMediator.Abstractions.Context.CorrelationContext                100%
+  NexMediator.Abstractions.Exceptions.NexMediatorException           100%
+
+NexMediator.Core                                                    92.2%
+  NexMediator.Core.DefaultNexMediator                               95.6%
+  NexMediator.Core.Internal.NexNotificationExecutor                 98.4%
+  NexMediator.Core.Internal.NexRequestExecutor                      96.9%
+  NexMediator.Core.Internal.NexStreamExecutor                        100%
+  NexMediator.Core.NexMediatorOptions                               79.5%
+
+NexMediator.Extensions                                              88.2%
+  NexMediator.Extensions.ServiceCollectionExtensions                88.2%
+
+NexMediator.Pipeline                                                85.9%
+  NexMediator.Core.Pipeline.PipelineBehaviorExecutor<T1, T2>         100%
+  NexMediator.Pipeline.Behaviors.CachingBehavior<T1, T2>            83.6%
+  NexMediator.Pipeline.Behaviors.FluentValidationBehavior<T1, T2>    100%
+  NexMediator.Pipeline.Behaviors.LoggingBehavior<T1, T2>              70%
+  NexMediator.Pipeline.Behaviors.TransactionBehavior<T1, T2>         100%

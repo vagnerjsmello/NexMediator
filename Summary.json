@@ -1,0 +1,42 @@
+{
+  "summary": {
+    "generatedon": "2025-05-18T23:56:36Z",
+    "parser": "MultiReport (4x Cobertura)",
+    "assemblies": 4,
+    "classes": 13,
+    "files": 13,
+    "coveredlines": 494,
+    "uncoveredlines": 56,
+    "coverablelines": 550,
+    "totallines": 1204,
+    "linecoverage": 89.8,
+    "coveredbranches": 101,
+    "totalbranches": 130,
+    "branchcoverage": 77.6,
+    "coveredmethods": 43,
+    "fullcoveredmethods": 33,
+    "totalmethods": 45,
+    "methodcoverage": 95.5,
+    "fullmethodcoverage": 73.3
+ },
+  "coverage": {
+    "assemblies": [
+      { "name": "NexMediator.Abstractions", "classes": 2, "coverage": 100, "coveredlines": 12, "coverablelines": 12, "totallines": 57, "branchcoverage": 100, "coveredbranches": 4, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 5, "fullcoveredmethods": 5, "totalmethods": 5, "classesinassembly": [
+        { "name": "NexMediator.Abstractions.Context.CorrelationContext", "coverage": 100, "coveredlines": 6, "coverablelines": 6, "totallines": 28, "branchcoverage": 100, "coveredbranches": 4, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 3, "fullcoveredmethods": 3, "totalmethods": 3 },
+        { "name": "NexMediator.Abstractions.Exceptions.NexMediatorException", "coverage": 100, "coveredlines": 6, "coverablelines": 6, "totallines": 29, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 } ] },
+      { "name": "NexMediator.Core", "classes": 5, "coverage": 92.2, "coveredlines": 274, "coverablelines": 297, "totallines": 610, "branchcoverage": 74.1, "coveredbranches": 46, "totalbranches": 62, "methodcoverage": 92.5, "fullmethodcoverage": 66.6, "coveredmethods": 25, "fullcoveredmethods": 18, "totalmethods": 27, "classesinassembly": [
+        { "name": "NexMediator.Core.DefaultNexMediator", "coverage": 95.6, "coveredlines": 22, "coverablelines": 23, "totallines": 80, "branchcoverage": 91.6, "coveredbranches": 11, "totalbranches": 12, "methodcoverage": 100, "fullmethodcoverage": 75, "coveredmethods": 4, "fullcoveredmethods": 3, "totalmethods": 4 },
+        { "name": "NexMediator.Core.Internal.NexNotificationExecutor", "coverage": 98.4, "coveredlines": 62, "coverablelines": 63, "totallines": 119, "branchcoverage": 75, "coveredbranches": 3, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 75, "coveredmethods": 4, "fullcoveredmethods": 3, "totalmethods": 4 },
+        { "name": "NexMediator.Core.Internal.NexRequestExecutor", "coverage": 96.9, "coveredlines": 64, "coverablelines": 66, "totallines": 118, "branchcoverage": 50, "coveredbranches": 1, "totalbranches": 2, "methodcoverage": 100, "fullmethodcoverage": 50, "coveredmethods": 4, "fullcoveredmethods": 2, "totalmethods": 4 },
+        { "name": "NexMediator.Core.Internal.NexStreamExecutor", "coverage": 100, "coveredlines": 52, "coverablelines": 52, "totallines": 97, "branchcoverage": 75, "coveredbranches": 6, "totalbranches": 8, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 3, "fullcoveredmethods": 3, "totalmethods": 3 },
+        { "name": "NexMediator.Core.NexMediatorOptions", "coverage": 79.5, "coveredlines": 74, "coverablelines": 93, "totallines": 196, "branchcoverage": 69.4, "coveredbranches": 25, "totalbranches": 36, "methodcoverage": 83.3, "fullmethodcoverage": 58.3, "coveredmethods": 10, "fullcoveredmethods": 7, "totalmethods": 12 } ] },
+      { "name": "NexMediator.Extensions", "classes": 1, "coverage": 88.2, "coveredlines": 30, "coverablelines": 34, "totallines": 64, "branchcoverage": 75, "coveredbranches": 3, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 0, "coveredmethods": 1, "fullcoveredmethods": 0, "totalmethods": 1, "classesinassembly": [
+        { "name": "NexMediator.Extensions.ServiceCollectionExtensions", "coverage": 88.2, "coveredlines": 30, "coverablelines": 34, "totallines": 64, "branchcoverage": 75, "coveredbranches": 3, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 0, "coveredmethods": 1, "fullcoveredmethods": 0, "totalmethods": 1 } ] },
+      { "name": "NexMediator.Pipeline", "classes": 5, "coverage": 85.9, "coveredlines": 178, "coverablelines": 207, "totallines": 473, "branchcoverage": 80, "coveredbranches": 48, "totalbranches": 60, "methodcoverage": 100, "fullmethodcoverage": 83.3, "coveredmethods": 12, "fullcoveredmethods": 10, "totalmethods": 12, "classesinassembly": [
+        { "name": "NexMediator.Core.Pipeline.PipelineBehaviorExecutor\u00602", "coverage": 100, "coveredlines": 39, "coverablelines": 39, "totallines": 124, "branchcoverage": 100, "coveredbranches": 10, "totalbranches": 10, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 3, "fullcoveredmethods": 3, "totalmethods": 3 },
+        { "name": "NexMediator.Pipeline.Behaviors.CachingBehavior\u00602", "coverage": 83.6, "coveredlines": 41, "coverablelines": 49, "totallines": 95, "branchcoverage": 61.1, "coveredbranches": 11, "totalbranches": 18, "methodcoverage": 100, "fullmethodcoverage": 50, "coveredmethods": 2, "fullcoveredmethods": 1, "totalmethods": 2 },
+        { "name": "NexMediator.Pipeline.Behaviors.FluentValidationBehavior\u00602", "coverage": 100, "coveredlines": 24, "coverablelines": 24, "totallines": 73, "branchcoverage": 100, "coveredbranches": 14, "totalbranches": 14, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 },
+        { "name": "NexMediator.Pipeline.Behaviors.LoggingBehavior\u00602", "coverage": 70, "coveredlines": 49, "coverablelines": 70, "totallines": 124, "branchcoverage": 58.3, "coveredbranches": 7, "totalbranches": 12, "methodcoverage": 100, "fullmethodcoverage": 66.6, "coveredmethods": 3, "fullcoveredmethods": 2, "totalmethods": 3 },
+        { "name": "NexMediator.Pipeline.Behaviors.TransactionBehavior\u00602", "coverage": 100, "coveredlines": 25, "coverablelines": 25, "totallines": 57, "branchcoverage": 100, "coveredbranches": 6, "totalbranches": 6, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 } ] } ]
+  }
+}
