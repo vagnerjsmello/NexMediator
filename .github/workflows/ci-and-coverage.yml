@@ -92,3 +92,5 @@ jobs:
             ${{ steps.read_summary.outputs.text }}
             ```
             The report is available in Actions > Artifacts > nexmediator-coverage-report
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
