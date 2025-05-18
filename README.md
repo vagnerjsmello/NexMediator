@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://www.nuget.org/packages/NexMediator"><img src="https://img.shields.io/nuget/v/NexMediator?style=flat-square" alt="NuGet version" /></a>
-  <a href="https://vagnerjsmello.github.io/NexMediator"><img src="https://img.shields.io/endpoint?url=https://vagnerjsmello.github.io/NexMediator/Summary.json&style=flat-square" alt="Coverage report" /></a>
+  <a href="https://vagnerjsmello.github.io/NexMediator/"><img src="https://img.shields.io/endpoint?url=https://vagnerjsmello.github.io/NexMediator/badge-summary.json&style=flat-square" alt="Coverage report" /></a>
   <img src="https://img.shields.io/badge/.NET-8.0-blueviolet?style=flat-square" />
   <img src="https://img.shields.io/badge/C%23-12.0-brightgreen?style=flat-square" />
   <img src="https://img.shields.io/badge/Pattern-CQRS-blue?style=flat-square" />
@@ -130,3 +130,4 @@ Apache 2.0 License — free for commercial and open source use.
 ## 🏷 Tags
 
 `.NET` • `C#` • `CQRS` • `Mediator` • `Open Source` • `NuGet` • `Clean Architecture` • `Pipeline` • `Notifications` • `Streaming` • `Validation` • `Transactions` • `TDD` • `DDD`
+"" 
