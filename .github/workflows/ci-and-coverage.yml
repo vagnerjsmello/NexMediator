@@ -68,7 +68,7 @@ jobs:
             -assemblyfilters:+NexMediator.Abstractions;+NexMediator.Core;+NexMediator.Extensions;+NexMediator.Pipeline;-*.Tests;-NexMediator
 
       - name: Upload coverage report artifact
-        uses: actions/upload-artifact@f4c9c0465b3483b97a55fcb8f9ddcc17d65a0117
+        uses: actions/upload-artifact@v4
         with:
           name: nexmediator-coverage-report
           path: coveragereport
