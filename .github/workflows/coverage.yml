@@ -45,7 +45,7 @@ jobs:
       - name: Read coverage summary into variable
         id: read_summary
         run: |
-          summary=$(cat coveragereport/Summary.txt)
+          summary=$(cat coveragereport/Summary.txt || echo "Coverage summary not found.")
           summary="${summary//'%'/'%25'}"
           summary="${summary//$'\n'/'%0A'}"
           summary="${summary//$'\r'/'%0D'}"
@@ -60,4 +60,4 @@ jobs:
             ```
             ${{ steps.read_summary.outputs.text }}
             ```
-            [Download full report from Actions > Artifacts](#)
+            Coverage report is available under "Actions > Artifacts > nexmediator-coverage-report"
