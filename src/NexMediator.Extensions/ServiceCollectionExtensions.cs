@@ -48,6 +48,11 @@ public static class ServiceCollectionExtensions
             .AsImplementedInterfaces()
             .WithTransientLifetime()
 
+            // Register all stream handlers
+            .AddClasses(c => c.AssignableTo(typeof(INexStreamRequestHandler<,>)))
+            .AsImplementedInterfaces()
+            .WithTransientLifetime()
+
             // Register all FluentValidation validators
             .AddClasses(c => c.AssignableTo(typeof(FluentValidation.IValidator<>)))
             .AsImplementedInterfaces()
