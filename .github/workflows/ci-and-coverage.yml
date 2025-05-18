@@ -60,12 +60,12 @@ jobs:
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
 
       - name: Generate HTML and summary coverage report
-        run: |
-          reportgenerator \
-            -reports:TestResults/**/coverage.cobertura.xml \
-            -targetdir:coveragereport \
-            "-reporttypes:Html;TextSummary" \
-            -assemblyfilters:+NexMediator.Abstractions;+NexMediator.Core;+NexMediator.Extensions;+NexMediator.Pipeline;-*.Tests;-NexMediator
+        run: >
+          reportgenerator
+          -reports:TestResults/**/coverage.cobertura.xml
+          -targetdir:coveragereport
+          "-reporttypes:Html;TextSummary"
+          "-assemblyfilters:+NexMediator.Abstractions;+NexMediator.Core;+NexMediator.Extensions;+NexMediator.Pipeline;-*.Tests;-NexMediator"
 
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
