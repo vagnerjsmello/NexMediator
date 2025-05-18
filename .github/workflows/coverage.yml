@@ -1,0 +1,63 @@
+name: Code Coverage Report
+
+on:
+  pull_request:
+    branches: [ develop, main ]
+
+jobs:
+  test-coverage:
+    name: Run Tests and Generate Coverage Report
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Run tests with coverage
+        run: |
+          dotnet test --collect:"XPlat Code Coverage" --results-directory ./TestResults
+
+      - name: Install ReportGenerator
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      - name: Generate HTML and summary coverage report
+        run: |
+          reportgenerator \
+            -reports:TestResults/**/coverage.cobertura.xml \
+            -targetdir:coveragereport \
+            -reporttypes:Html;TextSummary \
+            -assemblyfilters:+NexMediator.Abstractions;+NexMediator.Core;+NexMediator.Extensions;+NexMediator.Pipeline;-*.Tests;-NexMediator
+
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: nexmediator-coverage-report
+          path: coveragereport
+
+      - name: Read coverage summary into variable
+        id: read_summary
+        run: |
+          summary=$(cat coveragereport/Summary.txt)
+          summary="${summary//'%'/'%25'}"
+          summary="${summary//$'\n'/'%0A'}"
+          summary="${summary//$'\r'/'%0D'}"
+          echo "text=$summary" >> $GITHUB_OUTPUT
+
+      - name: Post coverage summary to PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: coverage-report
+          message: |
+            ## Code Coverage Summary (NexMediator)
+            ```
+            ${{ steps.read_summary.outputs.text }}
+            ```
+            [Download full report from Actions > Artifacts](#)
