@@ -64,7 +64,7 @@ jobs:
           reportgenerator
           -reports:TestResults/**/coverage.cobertura.xml
           -targetdir:coveragereport
-          "-reporttypes:Html;TextSummary"
+          "-reporttypes:Html;TextSummary;JsonSummary"
           "-assemblyfilters:+NexMediator.Abstractions;+NexMediator.Core;+NexMediator.Extensions;+NexMediator.Pipeline;-*.Tests;-NexMediator"
 
       - name: Upload coverage report artifact
