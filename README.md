@@ -1,7 +1,7 @@
 # NexMediator
 
 <p align="center">
-  <img src="https://github.com/vagnerjsmello/NexMediator/wiki/assets/nexmediator-logo-150px.png" alt="NexMediator logo" width="150" />
+  <img src="https://raw.githubusercontent.com/wiki/vagnerjsmello/NexMediator/assets/logo-nexmediator.png" alt="NexMediator logo" width="150" />
 </p>
 
 <p align="center"><strong>A modern, extensible, and high-performance .NET library for clean CQRS applications.</strong></p>
@@ -19,6 +19,7 @@
 ---
 
 ## 📘 Overview
+
 
 **NexMediator** is a clean, modular, and pluggable mediator engine for .NET 8+ applications — a robust alternative to MediatR with:
 
@@ -111,7 +112,8 @@ Star ⭐ the repo, suggest improvements, or submit PRs via `feature/*` branches.
 ✅ Use [Conventional Commits](https://www.conventionalcommits.org)  
 📦 Follow our branch strategy: `main`, `develop`, `feature/*`
 
-See [Contributing Guide →](https://github.com/vagnerjsmello/NexMediator/wiki/08-Contributing)
+
+See [Contributing Guide →](https://github.com/vagnerjsmello/NexMediator/wiki/08-Contributi
 
 ---
 
