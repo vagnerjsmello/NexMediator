@@ -1,9 +1,10 @@
 name: CI and Coverage
 
 on:
+  push:
+    branches: [ develop, main ]         
   pull_request:
     branches: [ develop, main ]
-
 jobs:
   build-and-test:
     name: Build and Test
