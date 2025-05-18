@@ -1,7 +1,7 @@
 # NexMediator
 
 <p align="center">
-  <img src="https://github.com/vagnerjsmello/NexMediator/wiki/assets/nexmediator-logo-150px.png" alt="NexMediator logo" width="150" />
+  <img src="https://raw.githubusercontent.com/wiki/vagnerjsmello/NexMediator/assets/logo-nexmediator.png" alt="NexMediator logo" width="150" />
 </p>
 
 <p align="center"><strong>A modern, extensible, and high-performance .NET library for clean CQRS applications.</strong></p>
