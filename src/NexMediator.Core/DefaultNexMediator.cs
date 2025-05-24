@@ -1,5 +1,7 @@
 using NexMediator.Abstractions.Interfaces;
-using NexMediator.Core.Internal;
+using NexMediator.Core.Internal.Notification;
+using NexMediator.Core.Internal.Send;
+using NexMediator.Core.Internal.Stream;
 
 namespace NexMediator.Core;
 
@@ -44,7 +46,7 @@ public class DefaultNexMediator : INexMediator
         if (request == null)
             throw new ArgumentNullException(nameof(request));
 
-        return NexRequestExecutor.Dispatch(request, _provider, cancellationToken);
+        return NexSendExecutor.Dispatch(request, _provider, cancellationToken);
     }
 
     /// <summary>

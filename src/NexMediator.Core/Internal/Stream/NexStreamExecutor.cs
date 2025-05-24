@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
-namespace NexMediator.Core.Internal;
+namespace NexMediator.Core.Internal.Stream;
 
 /// <summary>
 /// Executes stream requests using compiled delegates per request/response types.

@@ -3,7 +3,7 @@ using NexMediator.Abstractions.Interfaces;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 
-namespace NexMediator.Core.Internal;
+namespace NexMediator.Core.Internal.Notification;
 
 /// <summary>
 /// Builds and caches a dispatcher for each notification type.
