@@ -1,90 +1,48 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NexMediator.Abstractions.Interfaces;
 using System.Collections.Concurrent;
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
 namespace NexMediator.Core.Internal.Stream;
 
 /// <summary>
-/// Executes stream requests using compiled delegates per request/response types.
-/// 
-/// Optimizations:
-/// - Compiles expressions to avoid reflection at runtime.
-/// - Caches executor delegates by request and response types.
-/// - Avoids dynamic casting overhead.
+/// Executes stream requests using compiled delegate wrappers per request/response types.
 /// </summary>
 internal static class NexStreamExecutor
 {
-    private static readonly ConcurrentDictionary<(Type requestType, Type responseType),
-        Func<object, IServiceProvider, CancellationToken, IAsyncEnumerable<object>>> _cache =
-        new();
+    private static readonly ConcurrentDictionary<(Type, Type), INexStreamInvoker> _cache = new();
 
     /// <summary>
-    /// Executes a stream request and returns an async sequence of responses.
+    /// Dispatches a stream request using a cached invoker wrapper.
     /// </summary>
-    /// <typeparam name="TResponse">Type of each response item.</typeparam>
+    /// <typeparam name="TResponse">The type of each response item.</typeparam>
     /// <param name="request">The stream request to execute.</param>
-    /// <param name="provider">Service provider for resolving the handler.</param>
-    /// <param name="cancellationToken">Token to cancel the operation.</param>
-    /// <returns>An async enumerable of <typeparamref name="TResponse"/> items.</returns>
+    /// <param name="provider">The service provider to resolve handlers.</param>
+    /// <param name="cancellationToken">Token used to cancel the async stream.</param>
+    /// <returns>An async stream of responses.</returns>
     public static IAsyncEnumerable<TResponse> Execute<TResponse>(
         INexStreamRequest<TResponse> request,
         IServiceProvider provider,
         CancellationToken cancellationToken)
     {
-        var requestType = request.GetType();
-        var key = (requestType, typeof(TResponse));
+        var key = (request.GetType(), typeof(TResponse));
 
-        var executor = _cache.GetOrAdd(key, static tuple =>
+        // Local function avoids static lambda limitation with provider
+        INexStreamInvoker CreateInvoker((Type, Type) tuple)
         {
-            var (reqType, resType) = tuple;
-            var handlerType = typeof(INexStreamRequestHandler<,>)
-                .MakeGenericType(reqType, resType);
-            var handleMethod = handlerType
-                .GetMethod(nameof(INexStreamRequestHandler<INexStreamRequest<object>, object>.Handle))!;
+            var wrapperType = typeof(NexStreamInvoker<,>).MakeGenericType(tuple.Item1, tuple.Item2);
+            return (INexStreamInvoker)ActivatorUtilities.CreateInstance(provider, wrapperType)!;
+        }
 
-            var requestParam = Expression.Parameter(typeof(object), "request");
-            var providerParam = Expression.Parameter(typeof(IServiceProvider), "provider");
-            var ctParam = Expression.Parameter(typeof(CancellationToken), "ct");
+        var invoker = _cache.GetOrAdd(key, CreateInvoker);
 
-            var castRequest = Expression.Convert(requestParam, reqType);
-            var getHandler = Expression.Call(
-                typeof(ServiceProviderServiceExtensions),
-                nameof(ServiceProviderServiceExtensions.GetRequiredService),
-                new[] { handlerType },
-                providerParam);
-
-            var callHandle = Expression.Call(
-                getHandler,
-                handleMethod,
-                castRequest,
-                ctParam);
-
-            var convert = Expression.Convert(
-                callHandle,
-                typeof(IAsyncEnumerable<object>));
-
-            var lambda = Expression.Lambda<Func<object, IServiceProvider, CancellationToken, IAsyncEnumerable<object>>>(
-                convert,
-                requestParam,
-                providerParam,
-                ctParam);
-
-            return lambda.Compile();
-        });
-
-        var result = executor(request!, provider, cancellationToken);
-        return CastAsync<TResponse>(result, cancellationToken);
+        var stream = invoker.Invoke(request, provider, cancellationToken);
+        return CastAsync<TResponse>(stream, cancellationToken);
     }
 
     /// <summary>
-    /// Casts each object item in an async sequence to <typeparamref name="TResponse"/>.
+    /// Casts the response stream from object to the expected type.
     /// </summary>
-    /// <typeparam name="TResponse">Target item type.</typeparam>
-    /// <param name="source">Source sequence of objects.</param>
-    /// <param name="ct">Token to cancel the iteration.</param>
-    /// <returns>An async enumerable of <typeparamref name="TResponse"/> items.</returns>
     private static async IAsyncEnumerable<TResponse> CastAsync<TResponse>(
         IAsyncEnumerable<object> source,
         [EnumeratorCancellation] CancellationToken ct = default)
