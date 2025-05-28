@@ -219,11 +219,14 @@ var assemblies = [
   {
     "name": "NexMediator.Core",
     "classes": [
-      { "name": "NexMediator.Core.DefaultNexMediator", "rp": "NexMediator.Core_DefaultNexMediator.html", "cl": 22, "ucl": 1, "cal": 23, "tl": 80, "cb": 11, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "NexMediator.Core.Internal.NexNotificationExecutor", "rp": "NexMediator.Core_NexNotificationExecutor.html", "cl": 62, "ucl": 1, "cal": 63, "tl": 119, "cb": 3, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "NexMediator.Core.Internal.NexRequestExecutor", "rp": "NexMediator.Core_NexRequestExecutor.html", "cl": 64, "ucl": 2, "cal": 66, "tl": 118, "cb": 1, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "NexMediator.Core.Internal.NexStreamExecutor", "rp": "NexMediator.Core_NexStreamExecutor.html", "cl": 52, "ucl": 0, "cal": 52, "tl": 97, "cb": 6, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "NexMediator.Core.NexMediatorOptions", "rp": "NexMediator.Core_NexMediatorOptions.html", "cl": 74, "ucl": 19, "cal": 93, "tl": 196, "cb": 25, "tb": 36, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "NexMediator.Core.DefaultNexMediator", "rp": "NexMediator.Core_DefaultNexMediator.html", "cl": 22, "ucl": 1, "cal": 23, "tl": 82, "cb": 11, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "NexMediator.Core.Internal.Notification.NexNotificationExecutor", "rp": "NexMediator.Core_NexNotificationExecutor.html", "cl": 11, "ucl": 1, "cal": 12, "tl": 46, "cb": 3, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "NexMediator.Core.Internal.Notification.NexNotificationInvoker<T>", "rp": "NexMediator.Core_NexNotificationInvoker_1.html", "cl": 21, "ucl": 10, "cal": 31, "tl": 73, "cb": 7, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "NexMediator.Core.Internal.Send.NexSendExecutor", "rp": "NexMediator.Core_NexSendExecutor.html", "cl": 14, "ucl": 1, "cal": 15, "tl": 44, "cb": 3, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "NexMediator.Core.Internal.Send.NexSendInvoker<T1, T2>", "rp": "NexMediator.Core_NexSendInvoker_2.html", "cl": 24, "ucl": 1, "cal": 25, "tl": 60, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "NexMediator.Core.Internal.Stream.NexStreamExecutor", "rp": "NexMediator.Core_NexStreamExecutor.html", "cl": 17, "ucl": 0, "cal": 17, "tl": 55, "cb": 4, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "NexMediator.Core.Internal.Stream.NexStreamInvoker<T1, T2>", "rp": "NexMediator.Core_NexStreamInvoker_2.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 34, "cb": 4, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "NexMediator.Core.NexMediatorOptions", "rp": "NexMediator.Core_NexMediatorOptions.html", "cl": 89, "ucl": 5, "cal": 94, "tl": 208, "cb": 30, "tb": 36, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "NexMediator.Extensions",
@@ -246,17 +249,9 @@ var metrics = [{ "name": "Crap Score", "abbreviation": "crp", "explanationUrl": 
 var historicCoverageExecutionTimes = [];
 
 var riskHotspotMetrics = [
-      { "name": "Crap Score", "explanationUrl": "https://googletesting.blogspot.de/2011/02/this-code-is-crap.html" },
-      { "name": "Cyclomatic complexity", "explanationUrl": "https://en.wikipedia.org/wiki/Cyclomatic_complexity" },
 ];
 
 var riskHotspots = [
-  {
-    "assembly": "NexMediator.Core", "class": "NexMediator.Core.NexMediatorOptions", "reportPath": "NexMediator.Core_NexMediatorOptions.html", "methodName": "AddBehavior(System.Type,System.Int32,System.Boolean)", "methodShortName": "AddBehavior(...)", "fileIndex": 0, "line": 70,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
 ];
 
 var branchCoverageAvailable = true;

@@ -1,35 +1,38 @@
 {
   "summary": {
-    "generatedon": "2025-05-19T07:11:26Z",
+    "generatedon": "2025-05-28T22:01:31Z",
     "parser": "MultiReport (4x Cobertura)",
     "assemblies": 4,
-    "classes": 13,
-    "files": 13,
-    "coveredlines": 494,
-    "uncoveredlines": 56,
-    "coverablelines": 550,
-    "totallines": 1204,
-    "linecoverage": 89.8,
-    "coveredbranches": 101,
-    "totalbranches": 130,
-    "branchcoverage": 77.6,
-    "coveredmethods": 43,
-    "fullcoveredmethods": 33,
-    "totalmethods": 45,
-    "methodcoverage": 95.5,
-    "fullmethodcoverage": 73.3
+    "classes": 16,
+    "files": 16,
+    "coveredlines": 426,
+    "uncoveredlines": 52,
+    "coverablelines": 478,
+    "totallines": 1196,
+    "linecoverage": 89.1,
+    "coveredbranches": 122,
+    "totalbranches": 154,
+    "branchcoverage": 79.2,
+    "coveredmethods": 48,
+    "fullcoveredmethods": 35,
+    "totalmethods": 50,
+    "methodcoverage": 96,
+    "fullmethodcoverage": 70
  },
   "coverage": {
     "assemblies": [
       { "name": "NexMediator.Abstractions", "classes": 2, "coverage": 100, "coveredlines": 12, "coverablelines": 12, "totallines": 57, "branchcoverage": 100, "coveredbranches": 4, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 5, "fullcoveredmethods": 5, "totalmethods": 5, "classesinassembly": [
         { "name": "NexMediator.Abstractions.Context.CorrelationContext", "coverage": 100, "coveredlines": 6, "coverablelines": 6, "totallines": 28, "branchcoverage": 100, "coveredbranches": 4, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 3, "fullcoveredmethods": 3, "totalmethods": 3 },
         { "name": "NexMediator.Abstractions.Exceptions.NexMediatorException", "coverage": 100, "coveredlines": 6, "coverablelines": 6, "totallines": 29, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 } ] },
-      { "name": "NexMediator.Core", "classes": 5, "coverage": 92.2, "coveredlines": 274, "coverablelines": 297, "totallines": 610, "branchcoverage": 74.1, "coveredbranches": 46, "totalbranches": 62, "methodcoverage": 92.5, "fullmethodcoverage": 66.6, "coveredmethods": 25, "fullcoveredmethods": 18, "totalmethods": 27, "classesinassembly": [
-        { "name": "NexMediator.Core.DefaultNexMediator", "coverage": 95.6, "coveredlines": 22, "coverablelines": 23, "totallines": 80, "branchcoverage": 91.6, "coveredbranches": 11, "totalbranches": 12, "methodcoverage": 100, "fullmethodcoverage": 75, "coveredmethods": 4, "fullcoveredmethods": 3, "totalmethods": 4 },
-        { "name": "NexMediator.Core.Internal.NexNotificationExecutor", "coverage": 98.4, "coveredlines": 62, "coverablelines": 63, "totallines": 119, "branchcoverage": 75, "coveredbranches": 3, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 75, "coveredmethods": 4, "fullcoveredmethods": 3, "totalmethods": 4 },
-        { "name": "NexMediator.Core.Internal.NexRequestExecutor", "coverage": 96.9, "coveredlines": 64, "coverablelines": 66, "totallines": 118, "branchcoverage": 50, "coveredbranches": 1, "totalbranches": 2, "methodcoverage": 100, "fullmethodcoverage": 50, "coveredmethods": 4, "fullcoveredmethods": 2, "totalmethods": 4 },
-        { "name": "NexMediator.Core.Internal.NexStreamExecutor", "coverage": 100, "coveredlines": 52, "coverablelines": 52, "totallines": 97, "branchcoverage": 75, "coveredbranches": 6, "totalbranches": 8, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 3, "fullcoveredmethods": 3, "totalmethods": 3 },
-        { "name": "NexMediator.Core.NexMediatorOptions", "coverage": 79.5, "coveredlines": 74, "coverablelines": 93, "totallines": 196, "branchcoverage": 69.4, "coveredbranches": 25, "totalbranches": 36, "methodcoverage": 83.3, "fullmethodcoverage": 58.3, "coveredmethods": 10, "fullcoveredmethods": 7, "totalmethods": 12 } ] },
+      { "name": "NexMediator.Core", "classes": 8, "coverage": 91.5, "coveredlines": 206, "coverablelines": 225, "totallines": 602, "branchcoverage": 77.9, "coveredbranches": 67, "totalbranches": 86, "methodcoverage": 93.7, "fullmethodcoverage": 62.5, "coveredmethods": 30, "fullcoveredmethods": 20, "totalmethods": 32, "classesinassembly": [
+        { "name": "NexMediator.Core.DefaultNexMediator", "coverage": 95.6, "coveredlines": 22, "coverablelines": 23, "totallines": 82, "branchcoverage": 91.6, "coveredbranches": 11, "totalbranches": 12, "methodcoverage": 100, "fullmethodcoverage": 75, "coveredmethods": 4, "fullcoveredmethods": 3, "totalmethods": 4 },
+        { "name": "NexMediator.Core.Internal.Notification.NexNotificationExecutor", "coverage": 91.6, "coveredlines": 11, "coverablelines": 12, "totallines": 46, "branchcoverage": 75, "coveredbranches": 3, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 50, "coveredmethods": 2, "fullcoveredmethods": 1, "totalmethods": 2 },
+        { "name": "NexMediator.Core.Internal.Notification.NexNotificationInvoker\u00601", "coverage": 67.7, "coveredlines": 21, "coverablelines": 31, "totallines": 73, "branchcoverage": 58.3, "coveredbranches": 7, "totalbranches": 12, "methodcoverage": 66.6, "fullmethodcoverage": 0, "coveredmethods": 2, "fullcoveredmethods": 0, "totalmethods": 3 },
+        { "name": "NexMediator.Core.Internal.Send.NexSendExecutor", "coverage": 93.3, "coveredlines": 14, "coverablelines": 15, "totallines": 44, "branchcoverage": 75, "coveredbranches": 3, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 50, "coveredmethods": 2, "fullcoveredmethods": 1, "totalmethods": 2 },
+        { "name": "NexMediator.Core.Internal.Send.NexSendInvoker\u00602", "coverage": 96, "coveredlines": 24, "coverablelines": 25, "totallines": 60, "branchcoverage": 83.3, "coveredbranches": 5, "totalbranches": 6, "methodcoverage": 100, "fullmethodcoverage": 66.6, "coveredmethods": 3, "fullcoveredmethods": 2, "totalmethods": 3 },
+        { "name": "NexMediator.Core.Internal.Stream.NexStreamExecutor", "coverage": 100, "coveredlines": 17, "coverablelines": 17, "totallines": 55, "branchcoverage": 66.6, "coveredbranches": 4, "totalbranches": 6, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 4, "fullcoveredmethods": 4, "totalmethods": 4 },
+        { "name": "NexMediator.Core.Internal.Stream.NexStreamInvoker\u00602", "coverage": 100, "coveredlines": 8, "coverablelines": 8, "totallines": 34, "branchcoverage": 66.6, "coveredbranches": 4, "totalbranches": 6, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 1, "fullcoveredmethods": 1, "totalmethods": 1 },
+        { "name": "NexMediator.Core.NexMediatorOptions", "coverage": 94.6, "coveredlines": 89, "coverablelines": 94, "totallines": 208, "branchcoverage": 83.3, "coveredbranches": 30, "totalbranches": 36, "methodcoverage": 92.3, "fullmethodcoverage": 61.5, "coveredmethods": 12, "fullcoveredmethods": 8, "totalmethods": 13 } ] },
       { "name": "NexMediator.Extensions", "classes": 1, "coverage": 88.2, "coveredlines": 30, "coverablelines": 34, "totallines": 64, "branchcoverage": 75, "coveredbranches": 3, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 0, "coveredmethods": 1, "fullcoveredmethods": 0, "totalmethods": 1, "classesinassembly": [
         { "name": "NexMediator.Extensions.ServiceCollectionExtensions", "coverage": 88.2, "coveredlines": 30, "coverablelines": 34, "totallines": 64, "branchcoverage": 75, "coveredbranches": 3, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 0, "coveredmethods": 1, "fullcoveredmethods": 0, "totalmethods": 1 } ] },
       { "name": "NexMediator.Pipeline", "classes": 5, "coverage": 85.9, "coveredlines": 178, "coverablelines": 207, "totallines": 473, "branchcoverage": 80, "coveredbranches": 48, "totalbranches": 60, "methodcoverage": 100, "fullmethodcoverage": 83.3, "coveredmethods": 12, "fullcoveredmethods": 10, "totalmethods": 12, "classesinassembly": [
