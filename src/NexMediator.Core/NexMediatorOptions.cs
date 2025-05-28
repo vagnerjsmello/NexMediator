@@ -14,6 +14,12 @@ public class NexMediatorOptions
     private readonly IServiceCollection _services;
     private readonly Dictionary<Type, BehaviorRegistration> _behaviorMap = new();
 
+    /// <summary>
+    /// Indicates whether notification handlers should be executed in parallel.
+    /// If false, handlers are executed sequentially in registration order.
+    /// </summary>
+    public bool PublishNotificationsInParallel { get; set; } = true;
+
     private static readonly Type LoggingBehaviorType = typeof(LoggingBehavior<,>);
     private static readonly Type FluentValidationBehaviorType = typeof(FluentValidationBehavior<,>);
     private static readonly Type CachingBehaviorType = typeof(CachingBehavior<,>);
@@ -192,5 +198,11 @@ public class NexMediatorOptions
         => _behaviorMap.TryGetValue(behaviorType, out var reg)
            && reg.Order != expectedOrder;
 
+
+    /// <summary>
+    /// Indicates whether notification handlers should be executed in parallel.
+    /// If false, handlers are executed sequentially in registration order.
+    /// </summary>
+    
     private record BehaviorRegistration(Type BehaviorType, int Order);
 }

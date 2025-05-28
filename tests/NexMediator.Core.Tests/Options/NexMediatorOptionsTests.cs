@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using NexMediator.Abstractions.Context;
 using NexMediator.Abstractions.Interfaces;
 using NexMediator.Core.Tests.Helpers;
 using NexMediator.Pipeline.Behaviors;
@@ -151,4 +152,33 @@ public class NexMediatorOptionsTests
         result.Should().BeSameAs(_options);
         _services.Should().Contain(s => s.ImplementationType == typeof(FakeBehavior<,>));
     }
+
+    /// <summary>
+    /// Verifies that the <see cref="LoggingBehavior{TRequest, TResponse}"/> is registered with the service collection 
+    /// and that correlation context is enabled when logging behavior is added with correlation support.
+    /// </summary>
+    [Fact]
+    public void AddBehavior_ShouldRegisterCorrelation_WhenEnabledAndLogging()
+    {
+        // Act
+        _options.AddBehavior(typeof(LoggingBehavior<,>), 1, enableCorrelation: true);
+
+        // Assert
+        _services.Should().Contain(s => s.ServiceType == typeof(ICorrelationContext));
+        _services.Should().Contain(s => s.ServiceType == typeof(LoggingBehavior<,>) && s.Lifetime == ServiceLifetime.Scoped);
+    }
+
+    /// <summary>
+    /// Verifies that the <see cref="AddBehavior"/> method registers the specified behavior type when correlation is disabled.
+    /// </summary>
+    [Fact]
+    public void AddBehavior_ShouldRegister_WhenNotCorrelation()
+    {
+        // Act
+        _options.AddBehavior(typeof(FakeBehavior<,>), 1, enableCorrelation: false);
+
+        // Assert
+        _services.Should().Contain(s => s.ServiceType == typeof(FakeBehavior<,>) && s.Lifetime == ServiceLifetime.Transient);
+    }
+
 }
